@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Honest Hours</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 300px;
+      min-height: 360px;
+      background: #0d0d0d;
+      color: #f0f0f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 20px 20px;
+    }
+
+    .logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7ee8a2;
+      margin-bottom: 4px;
+    }
+
+    .logo span {
+      color: #4af;
+    }
+
+    .tagline {
+      font-size: 10px;
+      color: #555;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .employee-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    .employee-name span {
+      color: #fff;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .status-badge.active {
+      background: rgba(126, 232, 162, 0.12);
+      color: #7ee8a2;
+      border: 1px solid rgba(126, 232, 162, 0.3);
+    }
+
+    .status-badge.idle {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+
+    .status-badge.clocked-out {
+      background: rgba(255, 255, 255, 0.05);
+      color: #666;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-dot.pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hours-display {
+      font-size: 42px;
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hours-label {
+      font-size: 11px;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+
+    .btn-start {
+      background: #7ee8a2;
+      color: #0d0d0d;
+    }
+
+    .btn-start:hover {
+      background: #6dd992;
+      transform: translateY(-1px);
+    }
+
+    .btn-stop {
+      background: #ff4757;
+      color: #fff;
+    }
+
+    .btn-stop:hover {
+      background: #ff3344;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .meta {
+      margin-top: 16px;
+      font-size: 10px;
+      color: #3a3a3a;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .meta a {
+      color: #4af;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .setup-prompt {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .setup-prompt p {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .btn-setup {
+      background: #1a1a2e;
+      color: #4af;
+      border: 1px solid #4af;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      width: auto;
+    }
+
+    .btn-setup:hover {
+      background: rgba(68, 170, 255, 0.1);
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">⏱ Honest Hours</div>
+  <div class="tagline">honesthours.io</div>
+
+  <div id="app">
+    <!-- Injected by popup.js -->
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

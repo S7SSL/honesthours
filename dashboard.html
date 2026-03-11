@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Honest Hours — Employer Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080810;
+      --surface: #0f0f1a;
+      --surface2: #14141f;
+      --border: #1e1e2e;
+      --accent: #7ee8a2;
+      --accent2: #4af;
+      --text: #e8e8f0;
+      --text-muted: #555570;
+      --online: #7ee8a2;
+      --offline: #3a3a50;
+      --idle: #ffc107;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Header */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .header-logo span {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 14px;
+      margin-left: 12px;
+    }
+
+    .header-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* Main */
+    .main { padding: 32px; max-width: 1200px; margin: 0 auto; }
+
+    /* Company loader */
+    .loader-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    .field-group { flex: 1; }
+    .field-group label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 15px;
+      padding: 12px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { border-color: var(--accent); }
+
+    .btn-load {
+      padding: 12px 28px;
+      background: var(--accent);
+      color: #080810;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-load:hover { background: #6dd992; }
+
+    /* Section heading */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--accent);
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Today table */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead th {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+
+    td {
+      padding: 16px 20px;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    .employee-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .employee-id {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .hours-big {
+      font-size: 18px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .chip-online {
+      background: rgba(126, 232, 162, 0.12);
+      color: var(--online);
+      border: 1px solid rgba(126, 232, 162, 0.25);
+    }
+
+    .chip-offline {
+      background: rgba(255,255,255,0.04);
+      color: var(--offline);
+      border: 1px solid var(--border);
+    }
+
+    .chip-idle {
+      background: rgba(255, 193, 7, 0.1);
+      color: var(--idle);
+      border: 1px solid rgba(255, 193, 7, 0.25);
+    }
+
+    /* Weekly grid */
+    .weekly-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .weekly-card thead th:first-child { min-width: 160px; }
+
+    .day-col { text-align: center !important; }
+
+    .hours-cell {
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+    }
+
+    .hours-cell.good { color: var(--accent); }
+    .hours-cell.partial { color: var(--idle); }
+    .hours-cell.none { color: var(--text-muted); }
+
+    /* Footer */
+    .refresh-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 12px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 32px;
+      color: var(--text-muted);
+    }
+
+    .empty-state p { font-size: 14px; margin-top: 8px; }
+
+    .error-msg {
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid rgba(255, 71, 87, 0.3);
+      color: #ff6b7a;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 24px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">⏱ Honest Hours <span>Employer Dashboard</span></div>
+  <div class="header-meta" id="headerMeta">honesthours.io</div>
+</div>
+
+<div class="main">
+
+  <!-- Company loader -->
+  <div class="loader-card">
+    <div class="field-group">
+      <label>Company Code</label>
+      <input type="text" id="companyCodeInput" placeholder="e.g. ACME-2024" />
+    </div>
+    <button class="btn-load" id="loadBtn">Load Dashboard</button>
+  </div>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div id="dashboardContent" style="display:none;">
+
+    <!-- Today -->
+    <div class="section-head">
+      <div class="section-title">Today's Activity</div>
+      <div class="live-badge"><div class="live-dot"></div> Live · refreshes every 60s</div>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Clocked In</th>
+            <th>Clocked Out</th>
+            <th>Hours Today</th>
+            <th>Idle</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="todayBody">
+          <tr><td colspan="6"><div class="empty-state">Loading…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Weekly -->
+    <div class="section-head" style="margin-top:8px;">
+      <div class="section-title">This Week</div>
+    </div>
+
+    <div class="weekly-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th class="day-col" id="dayH0">Mon</th>
+            <th class="day-col" id="dayH1">Tue</th>
+            <th class="day-col" id="dayH2">Wed</th>
+            <th class="day-col" id="dayH3">Thu</th>
+            <th class="day-col" id="dayH4">Fri</th>
+            <th class="day-col">Sat</th>
+            <th class="day-col">Sun</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="weeklyBody">
+          <tr><td colspan="9"><div class="empty-state">Loading…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="refresh-note" id="refreshNote"></div>
+</div>
+
+<script>
+  const API = 'https://honesthours-api.onrender.com';
+  let currentCode = '';
+  let refreshTimer = null;
+
+  function fmt(seconds) {
+    if (!seconds || seconds <= 0) return '—';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return `${h}h ${String(m).padStart(2,'0')}m`;
+  }
+
+  function fmtTime(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function dayLabel(dateStr) {
+    const d = new Date(dateStr + 'T12:00:00');
+    return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  }
+
+  function last7Days() {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      days.push(d.toISOString().split('T')[0]);
+    }
+    return days;
+  }
+
+  async function loadDashboard(code) {
+    currentCode = code;
+    const err = document.getElementById('errorMsg');
+    err.style.display = 'none';
+
+    try {
+      const res = await fetch(`${API}/api/dashboard/${encodeURIComponent(code)}`);
+      if (!res.ok) throw new Error(`API error ${res.status}`);
+      const data = await res.json();
+
+      document.getElementById('dashboardContent').style.display = 'block';
+      document.getElementById('refreshNote').textContent =
+        `Last updated: ${new Date(data.fetched_at).toLocaleTimeString('en-GB')} · Company: ${code}`;
+      document.getElementById('headerMeta').textContent =
+        `${code} · ${new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long' })}`;
+
+      renderToday(data.today_sessions || []);
+      renderWeekly(data.weekly || {}, data.employees || []);
+
+    } catch (e) {
+      err.textContent = `Could not load dashboard: ${e.message}`;
+      err.style.display = 'block';
+    }
+  }
+
+  function renderToday(sessions) {
+    const tbody = document.getElementById('todayBody');
+    if (!sessions.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No activity today yet.<p>Employees need to clock in using the Honest Hours extension.</p></div></td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = sessions.map(s => {
+      let chipClass = 'chip-offline';
+      let chipLabel = '● Offline';
+      if (s.is_online && s.status === 'active') { chipClass = 'chip-online'; chipLabel = '● Active'; }
+      else if (s.status === 'idle')              { chipClass = 'chip-idle';   chipLabel = '◐ Idle'; }
+      else if (s.status === 'completed')         { chipClass = 'chip-offline'; chipLabel = '○ Done'; }
+
+      return `
+        <tr>
+          <td>
+            <div class="employee-name">${esc(s.employee_name || s.employee_id)}</div>
+            <div class="employee-id">${esc(s.employee_id)}</div>
+          </td>
+          <td>${fmtTime(s.start_time)}</td>
+          <td>${fmtTime(s.end_time)}</td>
+          <td><span class="hours-big">${fmt(s.total_active_seconds)}</span></td>
+          <td>${fmt(s.total_idle_seconds)}</td>
+          <td><span class="status-chip ${chipClass}">${chipLabel}</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  function renderWeekly(weekly, employees) {
+    const days = last7Days();
+    const tbody = document.getElementById('weeklyBody');
+
+    // Update day headers
+    days.forEach((d, i) => {
+      const el = document.getElementById(`dayH${i}`);
+      if (el) el.textContent = dayLabel(d);
+    });
+
+    if (!employees.length) {
+      tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state">No data yet.</div></td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = employees.map(empId => {
+      let totalSecs = 0;
+      const cells = days.map(day => {
+        const s = weekly[day] && weekly[day][empId];
+        const secs = s ? (s.total_active_seconds || 0) : 0;
+        totalSecs += secs;
+        const cls = secs >= 21600 ? 'good' : secs > 0 ? 'partial' : 'none';
+        return `<td class="hours-cell ${cls}">${secs > 0 ? fmt(secs) : '—'}</td>`;
+      }).join('');
+
+      const empName = (() => {
+        for (const d of Object.values(weekly)) {
+          if (d[empId]) return d[empId].employee_name || empId;
+        }
+        return empId;
+      })();
+
+      return `
+        <tr>
+          <td>
+            <div class="employee-name">${esc(empName)}</div>
+            <div class="employee-id">${esc(empId)}</div>
+          </td>
+          ${cells}
+          <td><strong>${fmt(totalSecs)}</strong></td>
+        </tr>`;
+    }).join('');
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  document.getElementById('loadBtn').addEventListener('click', () => {
+    const code = document.getElementById('companyCodeInput').value.trim();
+    if (!code) return;
+    loadDashboard(code);
+    if (refreshTimer) clearInterval(refreshTimer);
+    refreshTimer = setInterval(() => loadDashboard(code), 60000);
+  });
+
+  document.getElementById('companyCodeInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('loadBtn').click();
+  });
+
+  // Auto-load from URL hash: dashboard.html#COMPANYCODE
+  const hashCode = location.hash.replace('#', '').trim();
+  if (hashCode) {
+    document.getElementById('companyCodeInput').value = hashCode;
+    loadDashboard(hashCode);
+    refreshTimer = setInterval(() => loadDashboard(hashCode), 60000);
+  }
+</script>
+</body>
+</html>
