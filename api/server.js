@@ -9,21 +9,19 @@ const PORT = process.env.PORT || 3000;
 
 // ── Supabase ──────────────────────────────────────────────────────────────────
 
-const supabase = createClient(
-  process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_KEY || ''
-);
+const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── Middleware ────────────────────────────────────────────────────────────────
 
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-setup-token']
 }));
 app.use(express.json());
-
-// ── Logging ───────────────────────────────────────────────────────────────────
 
 app.use((req, _res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
@@ -37,7 +35,6 @@ app.get('/health', (_req, res) => {
 });
 
 // ── POST /api/session/start ───────────────────────────────────────────────────
-// Called when employee clicks Start.
 
 app.post('/api/session/start', async (req, res) => {
   const { employee_id, employee_name, company_code, session_id, start_time } = req.body;
@@ -48,7 +45,6 @@ app.post('/api/session/start', async (req, res) => {
 
   const today = new Date().toISOString().split('T')[0];
 
-  // Upsert session (idempotent — in case of reconnect)
   const { data, error } = await supabase
     .from('sessions')
     .upsert({
@@ -58,8 +54,7 @@ app.post('/api/session/start', async (req, res) => {
       date: today,
       start_time: start_time || new Date().toISOString(),
       status: 'active',
-      last_heartbeat: new Date().toISOString(),
-      // Allow updating heartbeat/status on re-start, but don't overwrite existing session_id
+      last_heartbeat: new Date().toISOString()
     }, {
       onConflict: 'company_code,employee_id,date',
       ignoreDuplicates: false
@@ -76,7 +71,6 @@ app.post('/api/session/start', async (req, res) => {
 });
 
 // ── POST /api/session/stop ────────────────────────────────────────────────────
-// Called when employee clicks Stop.
 
 app.post('/api/session/stop', async (req, res) => {
   const { employee_id, company_code, end_time, total_active_seconds, total_idle_seconds } = req.body;
@@ -111,7 +105,6 @@ app.post('/api/session/stop', async (req, res) => {
 });
 
 // ── POST /api/heartbeat ───────────────────────────────────────────────────────
-// Periodic ping from extension (every 5 min while active).
 
 app.post('/api/heartbeat', async (req, res) => {
   const {
@@ -133,7 +126,7 @@ app.post('/api/heartbeat', async (req, res) => {
       employee_id,
       employee_name: employee_name || employee_id,
       date: today,
-      start_time: now, // only used if row doesn't exist
+      start_time: now,
       total_active_seconds: total_active_seconds || 0,
       total_idle_seconds: idle_seconds || 0,
       status: status || 'active',
@@ -154,15 +147,12 @@ app.post('/api/heartbeat', async (req, res) => {
 });
 
 // ── GET /api/dashboard/:company_code ─────────────────────────────────────────
-// Returns all employees' sessions for today + last 7 days.
 
 app.get('/api/dashboard/:company_code', async (req, res) => {
   const { company_code } = req.params;
   if (!company_code) return res.status(400).json({ error: 'company_code required' });
 
   const today = new Date().toISOString().split('T')[0];
-
-  // Last 7 days
   const since = new Date();
   since.setDate(since.getDate() - 6);
   const sinceDate = since.toISOString().split('T')[0];
@@ -180,17 +170,15 @@ app.get('/api/dashboard/:company_code', async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 
-  // Group by date and employee
   const byDate = {};
   const employees = new Set();
 
-  data.forEach(s => {
+  (data || []).forEach(s => {
     employees.add(s.employee_id);
     if (!byDate[s.date]) byDate[s.date] = {};
     byDate[s.date][s.employee_id] = s;
   });
 
-  // Today's sessions with online status
   const todaySessions = (data || [])
     .filter(s => s.date === today)
     .map(s => ({
@@ -210,7 +198,6 @@ app.get('/api/dashboard/:company_code', async (req, res) => {
 });
 
 // ── GET /api/employee/:employee_id/summary ────────────────────────────────────
-// Individual employee stats for last 30 days.
 
 app.get('/api/employee/:employee_id/summary', async (req, res) => {
   const { employee_id } = req.params;
@@ -238,14 +225,14 @@ app.get('/api/employee/:employee_id/summary', async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 
-  const totalActive = data.reduce((s, r) => s + (r.total_active_seconds || 0), 0);
-  const totalDays = data.length;
+  const totalActive = (data || []).reduce((s, r) => s + (r.total_active_seconds || 0), 0);
+  const totalDays = (data || []).length;
   const avgPerDay = totalDays ? Math.round(totalActive / totalDays) : 0;
 
   return res.json({
     ok: true,
     employee_id,
-    sessions: data,
+    sessions: data || [],
     summary: {
       total_active_seconds: totalActive,
       total_days_tracked: totalDays,
@@ -255,16 +242,27 @@ app.get('/api/employee/:employee_id/summary', async (req, res) => {
   });
 });
 
+// ── GET /api/setup ────────────────────────────────────────────────────────────
+// Returns schema SQL to apply. Used for documentation / one-time setup.
+
+app.get('/api/setup', (req, res) => {
+  res.json({
+    message: 'Apply the schema from supabase/schema.sql in your Supabase SQL editor.',
+    schema_url: 'https://github.com/S7SSL/honesthours/blob/main/supabase/schema.sql',
+    dashboard_url: 'https://supabase.com/dashboard/project/gcsorjyxzyltzxpmaavt/sql'
+  });
+});
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function isRecentHeartbeat(ts) {
   if (!ts) return false;
-  const diff = Date.now() - new Date(ts).getTime();
-  return diff < 10 * 60 * 1000; // within 10 minutes
+  return Date.now() - new Date(ts).getTime() < 10 * 60 * 1000;
 }
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 
 app.listen(PORT, () => {
   console.log(`[HonestHours API] Listening on port ${PORT}`);
+  console.log(`[HonestHours API] Supabase: ${SUPABASE_URL ? 'configured' : 'NOT CONFIGURED'}`);
 });
