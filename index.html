@@ -3,24 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Honest Hours — WFH Time Tracking Built on Trust</title>
-  <meta name="description" content="AI-powered WFH time tracking for modern distributed teams. No screenshots. No surveillance. Just honest, verifiable hours." />
-  <meta property="og:title" content="Honest Hours" />
-  <meta property="og:description" content="WFH time tracking built on trust, not surveillance." />
+  <title>Honest Hours — Free Time Tracking for SMEs</title>
+  <meta name="description" content="Free Chrome extension for SMEs. Real-time activity tracking with zero micromanagement. Know when your team is actually working." />
+  <meta property="og:title" content="Honest Hours — Know when your team is actually working" />
+  <meta property="og:description" content="Free Chrome extension for SMEs. Real-time activity tracking with zero micromanagement." />
   <meta property="og:url" content="https://honesthours.io" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #07070f;
-      --surface: #0c0c18;
-      --surface2: #11111e;
-      --border: #1a1a2a;
-      --accent: #7ee8a2;
-      --accent2: #4aaeff;
-      --text: #eeeef8;
-      --muted: #55556a;
-      --gold: #ffd166;
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2128;
+      --border: #21262d;
+      --accent: #00ff88;
+      --accent-dim: rgba(0, 255, 136, 0.12);
+      --text: #e6edf3;
+      --muted: #7d8590;
     }
 
     html { scroll-behavior: smooth; }
@@ -28,16 +31,16 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       line-height: 1.6;
     }
 
-    /* ── NAV ──────────────────────────────────────────────── */
+    /* ── NAV ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      background: rgba(7, 7, 15, 0.88);
+      background: rgba(13, 17, 23, 0.90);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       padding: 16px 40px;
@@ -48,42 +51,26 @@
 
     .nav-logo {
       font-size: 18px;
-      font-weight: 800;
-      color: var(--accent);
+      font-weight: 700;
       letter-spacing: -0.02em;
-      text-decoration: none;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--text); }
+    .nav-logo .green { color: var(--accent); }
 
     .nav-cta {
       background: var(--accent);
-      color: #07070f !important;
-      padding: 9px 22px;
-      border-radius: 8px;
+      color: #0d1117;
       font-weight: 700;
-      font-size: 13px !important;
+      font-size: 14px;
+      padding: 9px 20px;
+      border-radius: 8px;
       text-decoration: none;
-      transition: background 0.2s !important;
+      transition: opacity 0.2s;
     }
 
-    .nav-cta:hover { background: #6dd992 !important; }
+    .nav-cta:hover { opacity: 0.85; }
 
-    /* ── HERO ─────────────────────────────────────────────── */
+    /* ── HERO ── */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -92,304 +79,186 @@
       justify-content: center;
       text-align: center;
       padding: 120px 24px 80px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -200px; left: 50%;
-      transform: translateX(-50%);
-      width: 900px; height: 600px;
-      background: radial-gradient(ellipse, rgba(126,232,162,0.07) 0%, transparent 70%);
-      pointer-events: none;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,255,136,0.08) 0%, transparent 70%);
     }
 
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(126,232,162,0.08);
-      border: 1px solid rgba(126,232,162,0.2);
+      background: var(--accent-dim);
+      border: 1px solid rgba(0, 255, 136, 0.25);
       color: var(--accent);
-      padding: 6px 16px;
-      border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 20px;
       margin-bottom: 32px;
     }
 
-    .hero-badge::before { content: '✦'; }
-
-    h1 {
-      font-size: clamp(42px, 7vw, 88px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.0;
-      margin-bottom: 24px;
-      max-width: 900px;
+    .hero-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 2s infinite;
     }
 
-    h1 .accent { color: var(--accent); }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero-logo {
+      font-size: clamp(48px, 8vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .hero-logo .green { color: var(--accent); }
 
     .hero-tagline {
-      font-size: clamp(16px, 2.5vw, 22px);
-      color: var(--muted);
-      max-width: 560px;
-      margin-bottom: 48px;
-      line-height: 1.5;
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
     }
 
-    .hero-tagline strong { color: var(--text); }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 44px;
+      line-height: 1.7;
+    }
 
-    .hero-actions {
+    .hero-ctas {
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 64px;
     }
 
     .btn-primary {
       background: var(--accent);
-      color: #07070f;
-      padding: 16px 36px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 800;
+      color: #0d1117;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 10px;
       text-decoration: none;
+      border: none;
+      cursor: pointer;
       transition: all 0.2s;
-      letter-spacing: -0.01em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn-primary:hover {
-      background: #6dd992;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(126,232,162,0.25);
+      opacity: 0.88;
+      transform: translateY(-1px);
     }
 
-    .btn-secondary {
+    .btn-ghost {
       background: transparent;
       color: var(--text);
-      padding: 16px 36px;
-      border-radius: 12px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 10px;
       text-decoration: none;
       border: 1px solid var(--border);
+      cursor: pointer;
       transition: all 0.2s;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .hero-trust {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 13px;
-      color: var(--muted);
     }
 
-    .hero-trust span { color: var(--accent); }
-
-    /* Extension preview mockup */
-    .ext-preview {
-      background: #0d0d1a;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px 20px;
-      width: 260px;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
-      margin: 60px auto 0;
-    }
-
-    .ext-logo { font-size: 12px; font-weight: 800; color: var(--accent); text-align: center; margin-bottom: 3px; }
-    .ext-domain { font-size: 10px; color: var(--muted); text-align: center; margin-bottom: 18px; }
-    .ext-name { font-size: 14px; font-weight: 600; color: #aaa; text-align: center; margin-bottom: 14px; }
-    .ext-badge {
-      display: flex; align-items: center; justify-content: center; gap: 7px;
-      background: rgba(126,232,162,0.1); border: 1px solid rgba(126,232,162,0.25);
-      color: var(--accent); padding: 5px 14px; border-radius: 20px;
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      margin: 0 auto 20px; width: fit-content;
-    }
-    .ext-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-    .ext-hours { font-size: 44px; font-weight: 300; color: #fff; text-align: center; margin-bottom: 4px; }
-    .ext-label { font-size: 10px; color: var(--muted); text-align: center; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 20px; }
-    .ext-btn { background: #ff4757; color: #fff; width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; }
-
-    /* ── SECTION WRAPPER ─────────────────────────────────── */
-    .section { padding: 100px 24px; }
-    .section-inner { max-width: 1100px; margin: 0 auto; }
-    .section-tag {
-      display: inline-block;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      margin-bottom: 16px;
-      font-weight: 700;
-    }
-    .section-heading {
-      font-size: clamp(28px, 4vw, 48px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-      line-height: 1.1;
-    }
-    .section-sub {
-      font-size: 17px;
-      color: var(--muted);
-      max-width: 540px;
-      line-height: 1.6;
-    }
-
-    /* ── FEATURES ────────────────────────────────────────── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      margin-top: 56px;
-    }
-
-    .feature-card {
+    .btn-ghost:hover {
+      border-color: var(--muted);
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px;
-      transition: border-color 0.2s, transform 0.2s;
     }
 
-    .feature-card:hover {
-      border-color: rgba(126,232,162,0.3);
-      transform: translateY(-4px);
-    }
-
-    .feature-icon {
-      font-size: 28px;
-      margin-bottom: 16px;
-    }
-
-    .feature-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: -0.02em;
-    }
-
-    .feature-desc {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    /* ── UAE/MARKET SECTION ──────────────────────────────── */
-    .market-section {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .market-inner {
+    /* ── SECTIONS ── */
+    section {
+      padding: 80px 24px;
       max-width: 1100px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
     }
 
-    .market-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 40px;
-    }
-
-    .stat-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-    }
-
-    .stat-num {
-      font-size: 36px;
-      font-weight: 900;
-      color: var(--accent);
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .stat-label {
+    .section-label {
       font-size: 12px;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .market-points {
-      list-style: none;
-      margin-top: 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .market-points li {
-      display: flex;
-      gap: 14px;
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .market-points li::before {
-      content: '→';
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       color: var(--accent);
-      flex-shrink: 0;
-      margin-top: 1px;
+      margin-bottom: 12px;
+      text-align: center;
     }
 
-    .market-points strong { color: var(--text); }
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      text-align: center;
+      margin-bottom: 16px;
+    }
 
-    /* ── HOW IT WORKS ────────────────────────────────────── */
-    .steps-grid {
+    .section-sub {
+      font-size: 16px;
+      color: var(--muted);
+      text-align: center;
+      max-width: 560px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2px;
-      margin-top: 56px;
-      background: var(--border);
-      border-radius: 20px;
-      overflow: hidden;
+      gap: 24px;
     }
 
     .step {
       background: var(--surface);
-      padding: 40px 32px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
       position: relative;
+      transition: border-color 0.2s;
     }
 
+    .step:hover { border-color: rgba(0, 255, 136, 0.3); }
+
     .step-num {
-      font-size: 56px;
-      font-weight: 900;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 48px;
+      font-weight: 800;
       color: var(--border);
       line-height: 1;
-      margin-bottom: 20px;
       letter-spacing: -0.04em;
     }
 
+    .step-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
     .step-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .step-desc {
@@ -398,550 +267,346 @@
       line-height: 1.6;
     }
 
-    /* ── PRICING ─────────────────────────────────────────── */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      margin-top: 56px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .pricing-card {
+    /* ── FEATURES ── */
+    .features-bg {
       background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 36px 32px;
-      position: relative;
-    }
-
-    .pricing-card.featured {
-      border-color: var(--accent);
-      background: linear-gradient(145deg, rgba(126,232,162,0.05), var(--surface));
-    }
-
-    .pricing-badge {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--accent);
-      color: #07070f;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 14px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      white-space: nowrap;
-    }
-
-    .pricing-tier {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    .pricing-price {
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .pricing-price sub {
-      font-size: 16px;
-      font-weight: 400;
-      color: var(--muted);
-      vertical-align: super;
-      margin-right: 4px;
-    }
-
-    .pricing-per {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 28px;
-    }
-
-    .pricing-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-
-    .pricing-features li {
-      font-size: 14px;
-      color: var(--muted);
-      display: flex;
-      gap: 10px;
-    }
-
-    .pricing-features li::before { content: '✓'; color: var(--accent); }
-
-    .btn-pricing {
-      display: block;
-      text-align: center;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 700;
-      text-decoration: none;
+      border-radius: 14px;
+      padding: 28px;
       transition: all 0.2s;
     }
 
-    .btn-pricing-primary {
-      background: var(--accent);
-      color: #07070f;
+    .feature-card:hover {
+      border-color: rgba(0, 255, 136, 0.3);
+      transform: translateY(-2px);
     }
 
-    .btn-pricing-primary:hover { background: #6dd992; }
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
 
-    .btn-pricing-ghost {
-      background: transparent;
-      color: var(--text);
+    .feature-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── PRICING ── */
+    .pricing-card {
+      max-width: 560px;
+      margin: 0 auto;
+      background: var(--surface);
       border: 1px solid var(--border);
-    }
-
-    .btn-pricing-ghost:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    /* ── ISA SUITE BANNER ────────────────────────────────── */
-    .isa-banner {
-      background: linear-gradient(135deg, rgba(74,174,255,0.08), rgba(126,232,162,0.06));
-      border: 1px solid rgba(74,174,255,0.2);
       border-radius: 20px;
-      padding: 40px;
+      padding: 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+    }
+
+    .pricing-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #0d1117;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .pricing-price {
+      font-size: 72px;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .pricing-price sup {
+      font-size: 32px;
+      font-weight: 700;
+      vertical-align: super;
+    }
+
+    .pricing-desc {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .pricing-perks {
+      list-style: none;
+      margin-bottom: 36px;
+      text-align: left;
+    }
+
+    .pricing-perks li {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 32px;
-      flex-wrap: wrap;
-      margin-top: 48px;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
     }
 
-    .isa-text {}
+    .pricing-perks li:last-child { border-bottom: none; }
 
-    .isa-eyebrow {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--accent2);
-      margin-bottom: 8px;
+    .pricing-perks li::before {
+      content: '✓';
+      color: var(--accent);
       font-weight: 700;
+      font-size: 16px;
+    }
+
+    .pricing-note {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ── ISA SECTION ── */
+    .isa-section {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .isa-text { flex: 1; min-width: 260px; }
+
+    .isa-logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
     }
 
     .isa-title {
       font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 8px;
+      font-weight: 700;
       letter-spacing: -0.02em;
+      margin-bottom: 12px;
     }
 
     .isa-desc {
-      font-size: 14px;
-      color: var(--muted);
-      max-width: 480px;
-      line-height: 1.6;
-    }
-
-    .btn-isa {
-      background: rgba(74,174,255,0.12);
-      color: var(--accent2);
-      border: 1px solid rgba(74,174,255,0.3);
-      padding: 12px 28px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-
-    .btn-isa:hover {
-      background: rgba(74,174,255,0.2);
-    }
-
-    /* ── CTA SECTION ─────────────────────────────────────── */
-    .cta-section {
-      text-align: center;
-      padding: 100px 24px;
-    }
-
-    .cta-inner { max-width: 580px; margin: 0 auto; }
-
-    .cta-heading {
-      font-size: clamp(32px, 5vw, 56px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      margin-bottom: 16px;
-      line-height: 1.05;
-    }
-
-    .cta-sub {
-      font-size: 17px;
-      color: var(--muted);
-      margin-bottom: 40px;
-      line-height: 1.5;
-    }
-
-    .email-form {
-      display: flex;
-      gap: 12px;
-      max-width: 480px;
-      margin: 0 auto 16px;
-    }
-
-    .email-form input {
-      flex: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
       font-size: 15px;
-      padding: 14px 18px;
-      outline: none;
-      transition: border-color 0.2s;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
     }
 
-    .email-form input:focus { border-color: var(--accent); }
-    .email-form input::placeholder { color: var(--muted); }
-
-    .email-form button {
-      background: var(--accent);
-      color: #07070f;
-      border: none;
-      border-radius: 10px;
-      padding: 14px 24px;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-
-    .email-form button:hover { background: #6dd992; }
-
-    .cta-note { font-size: 12px; color: var(--muted); }
-
-    .cta-success {
-      background: rgba(126,232,162,0.1);
-      border: 1px solid rgba(126,232,162,0.25);
+    .isa-link {
       color: var(--accent);
-      padding: 14px 24px;
-      border-radius: 10px;
-      font-size: 14px;
+      text-decoration: none;
       font-weight: 600;
-      max-width: 480px;
-      margin: 0 auto;
-      display: none;
+      font-size: 15px;
     }
 
-    /* ── FOOTER ──────────────────────────────────────────── */
+    .isa-link:hover { text-decoration: underline; }
+
+    .isa-cta { flex-shrink: 0; }
+
+    /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .footer-logo { font-size: 16px; font-weight: 800; color: var(--accent); }
-
-    .footer-links {
-      display: flex;
-      gap: 28px;
-      list-style: none;
-    }
-
-    .footer-links a {
+      padding: 32px 24px;
+      text-align: center;
       color: var(--muted);
-      text-decoration: none;
       font-size: 13px;
-      transition: color 0.2s;
     }
 
-    .footer-links a:hover { color: var(--text); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
 
-    .footer-copy {
-      font-size: 12px;
-      color: var(--muted);
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    /* ── RESPONSIVE ──────────────────────────────────────── */
-    @media (max-width: 768px) {
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
       nav { padding: 14px 20px; }
-      .nav-links { display: none; }
-      .market-inner { grid-template-columns: 1fr; }
-      .email-form { flex-direction: column; }
-      footer { flex-direction: column; text-align: center; }
-      .isa-banner { flex-direction: column; }
+      .hero { padding: 100px 20px 60px; }
+      .hero-ctas { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+      .isa-section { padding: 32px; flex-direction: column; }
+      .pricing-card { padding: 32px 24px; }
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="/">⏱ Honest Hours</a>
-  <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#how-it-works">How it works</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="#get-started" class="nav-cta">Get started →</a></li>
-  </ul>
-</nav>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Honest<span class="green">Hours</span></div>
+    <a href="https://chrome.google.com/webstore" class="nav-cta">Add to Chrome — Free</a>
+  </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge">Built for distributed teams in the Gulf &amp; beyond</div>
-  <h1>Honest hours.<br/><span class="accent">That's it.</span></h1>
-  <p class="hero-tagline">
-    WFH time tracking built on <strong>trust, not surveillance</strong>.<br />
-    Your team starts a timer. You see who worked when. That's all it does.
-  </p>
-  <div class="hero-actions">
-    <a href="#get-started" class="btn-primary">Get started free →</a>
-    <a href="dashboard.html" class="btn-secondary">See the dashboard</a>
-  </div>
-  <div class="hero-trust">
-    <span>✓</span> No screenshots &nbsp;·&nbsp; <span>✓</span> No keystroke logging &nbsp;·&nbsp; <span>✓</span> No screen recording
-  </div>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-badge">Free for SMEs · No credit card</div>
+    <h1 class="hero-logo">Honest<span class="green">Hours</span></h1>
+    <p class="hero-tagline">Know when your team is actually working</p>
+    <p class="hero-sub">Free Chrome extension for SMEs. Real-time activity tracking with zero micromanagement.</p>
+    <div class="hero-ctas">
+      <a href="https://chrome.google.com/webstore" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        Add to Chrome — Free
+      </a>
+      <a href="#how-it-works" class="btn-ghost">See how it works →</a>
+    </div>
+  </header>
 
-  <!-- Extension preview -->
-  <div class="ext-preview">
-    <div class="ext-logo">⏱ Honest Hours</div>
-    <div class="ext-domain">honesthours.io</div>
-    <div class="ext-name">👤 Ahmed Al-Rashid</div>
-    <div class="ext-badge"><div class="ext-dot"></div> Active</div>
-    <div class="ext-hours">6h 14m</div>
-    <div class="ext-label">Today's tracked hours</div>
-    <div class="ext-btn">■ Stop</div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="section" id="features">
-  <div class="section-inner">
-    <div class="section-tag">Features</div>
-    <h2 class="section-heading">Everything you need.<br/>Nothing you don't.</h2>
-    <p class="section-sub">Built for modern distributed teams that run on trust. No surveillance theatre.</p>
-
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">▶</div>
-        <div class="feature-title">Simple Start / Stop</div>
-        <div class="feature-desc">Employees click Start when their day begins, Stop when it ends. That's the entire workflow. No complexity, no friction — which means they actually use it.</div>
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="section-label">Simple setup</div>
+    <h2 class="section-title">Up and running in minutes</h2>
+    <p class="section-sub">No IT support needed. No server setup. Your team is tracking in under 5 minutes.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-icon">🔌</div>
+        <div class="step-title">Install the Chrome extension</div>
+        <div class="step-desc">One click from the Chrome Web Store. No IT required. Works on any Windows, Mac, or Chromebook.</div>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">💤</div>
-        <div class="feature-title">Smart Idle Detection</div>
-        <div class="feature-desc">Away from the keyboard for 5+ minutes? The timer pauses automatically. Resumes when they're back. Tracked hours reflect real working time — no gaming the system.</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-icon">👥</div>
+        <div class="step-title">Your team logs in and starts tracking</div>
+        <div class="step-desc">Each team member adds their name and company code. Clock in with one click — tracking starts automatically.</div>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <div class="feature-title">Clean Employer Dashboard</div>
-        <div class="feature-desc">See every employee, today's clock-in/out, hours worked, and live status. Weekly grid for the full picture. Built for managers who want data, not drama.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <div class="feature-title">Zero Surveillance</div>
-        <div class="feature-desc">No screenshots. No webcam. No keystroke logging. No screen recording. We track time — not people. Employees trust it, so they use it honestly.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">Real-Time Heartbeats</div>
-        <div class="feature-desc">The extension syncs to the cloud every 5 minutes while active. Employers see live status — who's online right now — refreshed automatically.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🌐</div>
-        <div class="feature-title">Works Anywhere</div>
-        <div class="feature-desc">Chrome extension works on any OS. API runs on cloud infrastructure. Works for teams in Dubai, London, Cairo, or anywhere your team is distributed.</div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-icon">📊</div>
+        <div class="step-title">See real-time activity in your dashboard</div>
+        <div class="step-desc">You see who's working, who's idle, and total hours — updated every 5 minutes. No waiting until end of day.</div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- UAE MARKET SECTION -->
-<section class="section market-section">
-  <div class="section-inner">
-    <div class="market-inner">
-      <div>
-        <div class="section-tag">Built for the Gulf</div>
-        <h2 class="section-heading">WFH accountability for UAE &amp; Gulf SMEs</h2>
-        <p class="section-sub">The UAE's remote workforce is growing fast. Companies need accountability without killing the flexibility that makes WFH attractive. Honest Hours threads that needle.</p>
-        <ul class="market-points">
-          <li><strong>No cultural friction.</strong> No surveillance that creates resentment. Just logged hours — a professional standard employees respect.</li>
-          <li><strong>AI-powered verification.</strong> Smart idle detection means the hours you see are real — not just "logged in all day."</li>
-          <li><strong>Audit-ready records.</strong> Every session stored with timestamps. Ready for HR reviews, payroll, or client billing.</li>
-          <li><strong>Part of a smarter AI stack.</strong> Pairs with the InstallSmart.ai suite of tools for UAE businesses building AI-first operations.</li>
-        </ul>
-      </div>
-      <div>
-        <div class="market-stats">
-          <div class="stat-card">
-            <div class="stat-num">68%</div>
-            <div class="stat-label">of UAE employees work remotely at least part of the week</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num">3×</div>
-            <div class="stat-label">more productive teams where managers trust, not monitor</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num">5 min</div>
-            <div class="stat-label">idle threshold — tracks real work, not screen-on time</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num">£9</div>
-            <div class="stat-label">per employee/month — less than one hour of lost productivity</div>
-          </div>
+  <!-- FEATURES -->
+  <div class="features-bg">
+    <section id="features">
+      <div class="section-label">Built for real teams</div>
+      <h2 class="section-title">Everything you need, nothing you don't</h2>
+      <p class="section-sub">Honest Hours tracks what matters — active time and idle time — without invading your team's privacy.</p>
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">💤</div>
+          <div class="feature-title">Idle detection</div>
+          <div class="feature-desc">Automatically detects when someone steps away from their desk. No gaming the clock.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <div class="feature-title">5-minute sync</div>
+          <div class="feature-desc">Data updates in real time, not end-of-day. You know what's happening while it's happening.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👁️</div>
+          <div class="feature-title">Team dashboard</div>
+          <div class="feature-desc">See everyone at a glance — clocked in, clocked out, active, idle. One view, zero confusion.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">Privacy-first</div>
+          <div class="feature-desc">Tracks activity, not websites or keystrokes. Your team sees exactly what's being tracked. Zero surveillance.</div>
         </div>
       </div>
-    </div>
+    </section>
   </div>
-</section>
 
-<!-- HOW IT WORKS -->
-<section class="section" id="how-it-works">
-  <div class="section-inner">
-    <div class="section-tag">How it works</div>
-    <h2 class="section-heading">Up and running in minutes.</h2>
-
-    <div class="steps-grid">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-title">Install the extension</div>
-        <div class="step-desc">Employees install the Honest Hours Chrome extension. Takes 30 seconds. Opens a clean setup page — enter name, employee ID, and the company code your HR team provides.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-title">Set your company code</div>
-        <div class="step-desc">HR or admin creates a company account at honesthours.io and gets a unique company code. Share it with your team. That's how employees link to your dashboard — no accounts for them to manage.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-title">Start tracking honestly</div>
-        <div class="step-desc">Employees click Start when their day begins. Hours accumulate in real time. Manager sees who's active, when they clocked in, and total hours — updated live in the employer dashboard.</div>
-      </div>
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Free. For real.</h2>
+    <p class="section-sub">No trials. No freemium gotchas. Just install and go.</p>
+    <div class="pricing-card">
+      <div class="pricing-badge">Free for teams up to 10</div>
+      <div class="pricing-price"><sup>£</sup>0</div>
+      <div class="pricing-desc">per month, forever</div>
+      <ul class="pricing-perks">
+        <li>Up to 10 team members</li>
+        <li>Real-time dashboard</li>
+        <li>Idle detection included</li>
+        <li>5-minute heartbeat sync</li>
+        <li>Clock in / clock out history</li>
+        <li>No credit card required</li>
+      </ul>
+      <a href="https://chrome.google.com/webstore" class="btn-primary" style="width:100%;justify-content:center;">
+        Add to Chrome — Free
+      </a>
+      <p class="pricing-note" style="margin-top:16px;">No credit card. No trial. Just install and go.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- PRICING -->
-<section class="section" id="pricing" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-  <div class="section-inner" style="text-align:center;">
-    <div class="section-tag">Pricing</div>
-    <h2 class="section-heading">Simple, honest pricing.</h2>
-    <p class="section-sub" style="margin:0 auto 8px;">No setup fees. No contracts. Cancel anytime.</p>
-
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="pricing-tier">Starter</div>
-        <div class="pricing-price"><sub>£</sub>9</div>
-        <div class="pricing-per">per employee / month · min. 3 employees</div>
-        <ul class="pricing-features">
-          <li>Chrome extension for all employees</li>
-          <li>Real-time employer dashboard</li>
-          <li>30-day session history</li>
-          <li>Smart idle detection</li>
-          <li>Email support</li>
-        </ul>
-        <a href="#get-started" class="btn-pricing btn-pricing-primary">Get started →</a>
-      </div>
-      <div class="pricing-card featured">
-        <div class="pricing-badge">Most popular</div>
-        <div class="pricing-tier">Team</div>
-        <div class="pricing-price"><sub>£</sub>7</div>
-        <div class="pricing-per">per employee / month · 10+ employees</div>
-        <ul class="pricing-features">
-          <li>Everything in Starter</li>
-          <li>90-day session history</li>
-          <li>CSV export for payroll</li>
-          <li>Department grouping</li>
-          <li>Priority support</li>
-        </ul>
-        <a href="#get-started" class="btn-pricing btn-pricing-primary">Get started →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-tier">Self-host</div>
-        <div class="pricing-price">Free</div>
-        <div class="pricing-per">open source · bring your own infra</div>
-        <ul class="pricing-features">
-          <li>Full source code on GitHub</li>
-          <li>Deploy to any cloud</li>
-          <li>Your own Supabase database</li>
-          <li>Unlimited employees</li>
-          <li>Community support</li>
-        </ul>
-        <a href="https://github.com/S7SSL/honesthours" target="_blank" class="btn-pricing btn-pricing-ghost">View on GitHub →</a>
-      </div>
-    </div>
-
-    <!-- ISA Suite upsell -->
-    <div class="isa-banner">
+  <!-- ISA -->
+  <section id="about">
+    <div class="isa-section">
       <div class="isa-text">
-        <div class="isa-eyebrow">✦ Part of the InstallSmart.ai suite</div>
-        <div class="isa-title">Building AI infrastructure for Gulf SMEs?</div>
-        <div class="isa-desc">Honest Hours is one component of a growing suite of AI-native business tools designed for UAE and Gulf companies. From HR automation to operational intelligence — built for the region.</div>
+        <div class="isa-logo">Built by InstallSmart.AI</div>
+        <h3 class="isa-title">We build tools to show what AI can do for your business</h3>
+        <p class="isa-desc">
+          Honest Hours is a free tool from InstallSmart.AI — the independent AI advisory firm for London SMEs.
+          We build practical tools like this to demonstrate what's possible. No fluff, no hype — just working software that solves real problems.
+        </p>
+        <p class="isa-desc">
+          If you're thinking about AI in your business,
+          <a href="https://calendly.com/sat-installsmart/15min" class="isa-link">we'd love to talk →</a>
+        </p>
       </div>
-      <a href="https://installsmart.ai" target="_blank" class="btn-isa">Explore InstallSmart.ai →</a>
+      <div class="isa-cta">
+        <a href="https://calendly.com/sat-installsmart/15min" class="btn-primary">Book a free 15-min chat</a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section class="cta-section" id="get-started">
-  <div class="cta-inner">
-    <h2 class="cta-heading">Ready to track honest hours?</h2>
-    <p class="cta-sub">Join distributed teams across the Gulf and beyond. Start free, no credit card required.</p>
-
-    <form class="email-form" id="ctaForm" onsubmit="handleSubmit(event)">
-      <input type="email" id="emailInput" placeholder="your@company.com" required />
-      <button type="submit">Get early access →</button>
-    </form>
-
-    <div class="cta-success" id="ctaSuccess">
-      ✓ You're on the list! We'll be in touch shortly.
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div><strong>Honest<span style="color:var(--accent)">Hours</span></strong></div>
+      <div>© 2026 Kaizen Finance Ltd &nbsp;·&nbsp; <a href="mailto:sat@installsmart.ai">sat@installsmart.ai</a> &nbsp;·&nbsp; <a href="https://honesthours.io">honesthours.io</a></div>
+      <div><a href="/privacy.html">Privacy Policy</a></div>
     </div>
-
-    <p class="cta-note">No credit card · Cancel anytime · Setup in 5 minutes</p>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">⏱ Honest Hours</div>
-  <ul class="footer-links">
-    <li><a href="https://github.com/S7SSL/honesthours" target="_blank">GitHub</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="mailto:hello@honesthours.io">Contact</a></li>
-    <li><a href="https://installsmart.ai" target="_blank">InstallSmart.ai</a></li>
-  </ul>
-  <div class="footer-copy">© 2024 Honest Hours · honesthours.io · Part of the InstallSmart.ai suite</div>
-</footer>
-
-<script>
-  function handleSubmit(e) {
-    e.preventDefault();
-    const email = document.getElementById('emailInput').value;
-    document.getElementById('ctaForm').style.display = 'none';
-    document.getElementById('ctaSuccess').style.display = 'block';
-    // In production: POST to /api/waitlist or a form service
-    console.log('Early access signup:', email);
-  }
-</script>
+  </footer>
 
 </body>
 </html>
