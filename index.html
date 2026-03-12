@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HonestHours — Know when your team is actually working</title>
   <meta name="description" content="Free Chrome extension for SMEs. Real-time activity tracking with zero micromanagement. Know when your team is actually working." />
-  <meta property="og:title" content="HonestHours — Know when your team is actually working" />
-  <meta property="og:description" content="Free Chrome extension for SMEs. Real-time activity tracking without the surveillance." />
-  <meta property="og:url" content="https://s7ssl.github.io/honesthours/" />
+  <meta property="og:title" content="HonestHours — Free Time Tracking for SMEs" />
+  <meta property="og:description" content="Know when your team is actually working. Free Chrome extension, free for 6 months." />
+  <meta property="og:url" content="https://honesthours.co.uk" />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://s7ssl.github.io/honesthours/brand/og-image.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -727,15 +728,20 @@
   <!-- ── NAV ── -->
   <nav>
     <a href="/" class="nav-logo">
-      <!-- Clock + check SVG logo -->
+      <!-- HonestHours logo — clock with 10:10 hands + checkmark -->
       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="17" cy="17" r="16" stroke="#00d4aa" stroke-width="1.5" fill="none" opacity="0.2"/>
+        <!-- Glow ring -->
+        <circle cx="17" cy="17" r="16" stroke="#00d4aa" stroke-width="0.5" fill="none" opacity="0.18"/>
+        <!-- Clock face -->
         <circle cx="17" cy="17" r="13" stroke="#00d4aa" stroke-width="2" fill="none"/>
-        <line x1="17" y1="9" x2="17" y2="17" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
-        <line x1="17" y1="17" x2="22" y2="20" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+        <!-- Hour hand → 10 o'clock -->
+        <line x1="17" y1="17" x2="9.7" y2="12.7" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+        <!-- Minute hand → 2 o'clock -->
+        <line x1="17" y1="17" x2="24.4" y2="12.7" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+        <!-- Centre dot -->
         <circle cx="17" cy="17" r="1.5" fill="#00d4aa"/>
-        <!-- tick / check at bottom right quadrant -->
-        <path d="M12.5 17.5 L15.5 20.5 L22 13.5" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+        <!-- Checkmark (lower half) -->
+        <path d="M11.5 19.5 L15.5 23.5 L23 15.5" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
       </svg>
       <span class="wordmark">
         <span class="wordmark-honest">Honest</span><span class="wordmark-hours">Hours</span>
@@ -1019,11 +1025,12 @@
     <div class="footer-left">
       <a href="/" class="nav-logo" style="gap:8px">
         <svg width="26" height="26" viewBox="0 0 34 34" fill="none">
+          <circle cx="17" cy="17" r="16" stroke="#00d4aa" stroke-width="0.5" fill="none" opacity="0.18"/>
           <circle cx="17" cy="17" r="13" stroke="#00d4aa" stroke-width="2" fill="none"/>
-          <line x1="17" y1="9" x2="17" y2="17" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
-          <line x1="17" y1="17" x2="22" y2="20" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17" y1="17" x2="9.7" y2="12.7" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17" y1="17" x2="24.4" y2="12.7" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
           <circle cx="17" cy="17" r="1.5" fill="#00d4aa"/>
-          <path d="M12.5 17.5 L15.5 20.5 L22 13.5" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+          <path d="M11.5 19.5 L15.5 23.5 L23 15.5" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
         </svg>
         <span class="wordmark" style="font-size:15px">
           <span class="wordmark-honest">Honest</span><span class="wordmark-hours">Hours</span>
