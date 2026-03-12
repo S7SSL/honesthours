@@ -1,0 +1,53 @@
+<svg width="1584" height="396" viewBox="0 0 1584 396" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark navy background -->
+  <rect width="1584" height="396" fill="#0a0f1a"/>
+
+  <!-- Subtle grid dot pattern -->
+  <defs>
+    <pattern id="grid-dots" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="24" cy="24" r="1.2" fill="#00d4aa" opacity="0.12"/>
+    </pattern>
+  </defs>
+  <rect width="1584" height="396" fill="url(#grid-dots)"/>
+
+  <!-- Subtle accent arc behind logo -->
+  <circle cx="792" cy="158" r="280" stroke="#00d4aa" stroke-width="0.5" fill="none" opacity="0.06"/>
+  <circle cx="792" cy="158" r="340" stroke="#00d4aa" stroke-width="0.5" fill="none" opacity="0.04"/>
+
+  <!-- === CENTRED LOGO === -->
+  <!-- Clock icon: centre at (692, 158), R=55 -->
+  <!-- Glow ring -->
+  <circle cx="692" cy="158" r="61" stroke="#00d4aa" stroke-width="0.8" fill="none" opacity="0.15"/>
+  <!-- Clock face -->
+  <circle cx="692" cy="158" r="55" stroke="#00d4aa" stroke-width="3.5" fill="none"/>
+  <!-- Hour hand → 10 o'clock (length 32) -->
+  <line x1="692" y1="158" x2="664.3" y2="142" stroke="#00d4aa" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Minute hand → 2 o'clock (length 42) -->
+  <line x1="692" y1="158" x2="728.4" y2="137" stroke="#00d4aa" stroke-width="3" stroke-linecap="round"/>
+  <!-- Centre dot -->
+  <circle cx="692" cy="158" r="5" fill="#00d4aa"/>
+  <!-- Checkmark (lower half of clock) -->
+  <path d="M668 168 L685 186 L722 152" stroke="#00d4aa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+
+  <!-- Wordmark: Honest + Hours, centred after clock -->
+  <text font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="56" letter-spacing="-1" y="184">
+    <tspan x="768" fill="#ffffff" font-weight="400">Honest</tspan><tspan fill="#00d4aa" font-weight="700">Hours</tspan>
+  </text>
+
+  <!-- Tagline below logo -->
+  <text x="792" y="248" text-anchor="middle"
+    font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
+    font-size="26" fill="#8892a4" font-weight="400" letter-spacing="0.2">
+    Know when your team is actually working
+  </text>
+
+  <!-- Divider line -->
+  <line x1="692" y1="274" x2="892" y2="274" stroke="#1f2937" stroke-width="1"/>
+
+  <!-- Bottom right: free offer + brand -->
+  <text x="1544" y="360"
+    font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
+    font-size="20" fill="#00d4aa" font-weight="600" text-anchor="end" letter-spacing="0.1">
+    Free for 6 months · installsmart.ai
+  </text>
+</svg>

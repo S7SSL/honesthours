@@ -1,0 +1,67 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Open Graph social share image — 1200×630 -->
+  <rect width="1200" height="630" fill="#0a0f1a"/>
+
+  <!-- Grid dot background -->
+  <defs>
+    <pattern id="og-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="1" fill="#00d4aa" opacity="0.1"/>
+    </pattern>
+    <!-- Badge gradient -->
+    <linearGradient id="badge-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00d4aa" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#00d4aa" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#og-grid)"/>
+
+  <!-- Subtle glow behind icon -->
+  <circle cx="600" cy="195" r="120" fill="#00d4aa" opacity="0.04"/>
+  <circle cx="600" cy="195" r="85" fill="#00d4aa" opacity="0.04"/>
+
+  <!-- === Large clock icon: centre (600, 195), R=58 === -->
+  <!-- Outer glow ring -->
+  <circle cx="600" cy="195" r="65" stroke="#00d4aa" stroke-width="0.8" fill="none" opacity="0.18"/>
+  <!-- Clock face -->
+  <circle cx="600" cy="195" r="58" stroke="#00d4aa" stroke-width="3.5" fill="none"/>
+  <!-- Hour hand → 10 o'clock (length 34) -->
+  <line x1="600" y1="195" x2="570.6" y2="178" stroke="#00d4aa" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Minute hand → 2 o'clock (length 44) -->
+  <line x1="600" y1="195" x2="638.1" y2="173" stroke="#00d4aa" stroke-width="3" stroke-linecap="round"/>
+  <!-- Centre dot -->
+  <circle cx="600" cy="195" r="5" fill="#00d4aa"/>
+  <!-- Checkmark -->
+  <path d="M574 207 L592 226 L631 192" stroke="#00d4aa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+
+  <!-- Headline: HonestHours -->
+  <text x="600" y="320" text-anchor="middle"
+    font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
+    font-size="72" font-weight="700" fill="#ffffff" letter-spacing="-2">
+    HonestHours
+  </text>
+
+  <!-- Subline -->
+  <text x="600" y="378" text-anchor="middle"
+    font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
+    font-size="30" font-weight="400" fill="#8892a4" letter-spacing="0.2">
+    Free time tracking for SMEs
+  </text>
+
+  <!-- Badge: Free for 6 months -->
+  <rect x="454" y="412" width="292" height="52" rx="26" fill="url(#badge-grad)" stroke="#00d4aa" stroke-width="1.5" stroke-opacity="0.5"/>
+  <text x="600" y="444" text-anchor="middle"
+    font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
+    font-size="22" font-weight="600" fill="#00d4aa" letter-spacing="0.3">
+    Free for 6 months
+  </text>
+
+  <!-- Divider -->
+  <line x1="500" y1="560" x2="700" y2="560" stroke="#1f2937" stroke-width="1"/>
+
+  <!-- Footer: Built by InstallSmart.AI -->
+  <text x="600" y="594" text-anchor="middle"
+    font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
+    font-size="19" font-weight="400" fill="#4b5563" letter-spacing="0.1">
+    Built by InstallSmart.AI
+  </text>
+</svg>
