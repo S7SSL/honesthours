@@ -3,27 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Honest Hours — Free Time Tracking for SMEs</title>
+  <title>HonestHours — Know when your team is actually working</title>
   <meta name="description" content="Free Chrome extension for SMEs. Real-time activity tracking with zero micromanagement. Know when your team is actually working." />
-  <meta property="og:title" content="Honest Hours — Know when your team is actually working" />
-  <meta property="og:description" content="Free Chrome extension for SMEs. Real-time activity tracking with zero micromanagement." />
-  <meta property="og:url" content="https://honesthours.io" />
+  <meta property="og:title" content="HonestHours — Know when your team is actually working" />
+  <meta property="og:description" content="Free Chrome extension for SMEs. Real-time activity tracking without the surveillance." />
+  <meta property="og:url" content="https://s7ssl.github.io/honesthours/" />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --surface2: #1c2128;
-      --border: #21262d;
-      --accent: #00ff88;
-      --accent-dim: rgba(0, 255, 136, 0.12);
-      --text: #e6edf3;
-      --muted: #7d8590;
+      --bg: #0a0f1a;
+      --card: #111827;
+      --border: #1f2937;
+      --accent: #00d4aa;
+      --accent-glow: rgba(0, 212, 170, 0.15);
+      --accent-dim: rgba(0, 212, 170, 0.08);
+      --text: #ffffff;
+      --muted: #8892a4;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
     }
 
     html { scroll-behavior: smooth; }
@@ -33,42 +36,72 @@
       color: var(--text);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       line-height: 1.6;
+      overflow-x: hidden;
     }
+
+    /* ── ANIMATED GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 212, 170, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 170, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body > * { position: relative; z-index: 1; }
 
     /* ── NAV ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      background: rgba(13, 17, 23, 0.90);
-      backdrop-filter: blur(16px);
+      background: rgba(10, 15, 26, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      padding: 16px 40px;
+      padding: 0 40px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
     .nav-logo {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
     }
 
-    .nav-logo .green { color: var(--accent); }
+    .nav-logo svg { flex-shrink: 0; }
+
+    .wordmark {
+      font-size: 18px;
+      letter-spacing: -0.3px;
+      line-height: 1;
+    }
+    .wordmark-honest { font-weight: 500; color: #fff; }
+    .wordmark-hours  { font-weight: 700; color: var(--accent); }
 
     .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: var(--accent);
-      color: #0d1117;
-      font-weight: 700;
-      font-size: 14px;
-      padding: 9px 20px;
-      border-radius: 8px;
+      color: #0a0f1a;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 999px;
       text-decoration: none;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
     }
-
-    .nav-cta:hover { opacity: 0.85; }
+    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
 
     /* ── HERO ── */
     .hero {
@@ -79,532 +112,932 @@
       justify-content: center;
       text-align: center;
       padding: 120px 24px 80px;
-      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,255,136,0.08) 0%, transparent 70%);
+      position: relative;
     }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero > * { position: relative; z-index: 1; }
 
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       background: var(--accent-dim);
-      border: 1px solid rgba(0, 255, 136, 0.25);
+      border: 1px solid rgba(0, 212, 170, 0.25);
       color: var(--accent);
       font-size: 12px;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
       padding: 6px 14px;
-      border-radius: 20px;
-      margin-bottom: 32px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
-    .hero-badge::before {
-      content: '';
-      width: 7px;
-      height: 7px;
+    .hero-badge-dot {
+      width: 6px; height: 6px;
       background: var(--accent);
       border-radius: 50%;
-      animation: blink 2s infinite;
+      animation: pulse-dot 2s infinite;
     }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
     }
 
-    .hero-logo {
-      font-size: clamp(48px, 8vw, 72px);
-      font-weight: 800;
-      letter-spacing: -0.04em;
+    h1 {
+      font-size: clamp(42px, 7vw, 76px);
+      font-weight: 700;
       line-height: 1.1;
-      margin-bottom: 24px;
+      letter-spacing: -2px;
+      max-width: 800px;
+      margin: 0 auto 24px;
     }
 
-    .hero-logo .green { color: var(--accent); }
-
-    .hero-tagline {
-      font-size: clamp(18px, 3vw, 24px);
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
     }
 
     .hero-sub {
-      font-size: 16px;
+      font-size: clamp(16px, 2.5vw, 20px);
       color: var(--muted);
-      max-width: 520px;
-      margin-bottom: 44px;
-      line-height: 1.7;
+      max-width: 540px;
+      margin: 0 auto 40px;
+      line-height: 1.65;
     }
 
     .hero-ctas {
       display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
+      gap: 14px;
       justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
     }
 
     .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       background: var(--accent);
-      color: #0d1117;
+      color: #0a0f1a;
       font-size: 15px;
       font-weight: 700;
       padding: 14px 28px;
-      border-radius: 10px;
+      border-radius: 12px;
       text-decoration: none;
-      border: none;
-      cursor: pointer;
       transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      box-shadow: 0 0 30px rgba(0, 212, 170, 0.3);
     }
-
     .btn-primary:hover {
-      opacity: 0.88;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(0, 212, 170, 0.45);
     }
 
     .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: transparent;
       color: var(--text);
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 500;
       padding: 14px 28px;
-      border-radius: 10px;
-      text-decoration: none;
+      border-radius: 12px;
       border: 1px solid var(--border);
-      cursor: pointer;
+      text-decoration: none;
       transition: all 0.2s;
-      display: inline-flex;
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .social-proof {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .social-proof-dot { color: var(--border); }
+    .social-proof strong { color: var(--text); font-weight: 500; }
+
+    /* ── DASHBOARD MOCK ── */
+    .dashboard-section {
+      padding: 40px 24px 100px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .dashboard-wrapper {
+      position: relative;
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .dashboard-glow {
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0, 212, 170, 0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .dashboard-mock {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+      position: relative;
+    }
+
+    .dashboard-topbar {
+      background: #0d1520;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .btn-ghost:hover {
-      border-color: var(--muted);
-      background: var(--surface);
+    .traffic-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
     }
+    .td-red { background: #ff5f57; }
+    .td-amber { background: #febc2e; }
+    .td-green { background: #28c840; }
+
+    .dashboard-title-bar {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .dashboard-header {
+      padding: 20px 24px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dashboard-header-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .dashboard-date {
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .dashboard-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 24px;
+      border-bottom: 1px solid rgba(31,41,55,0.6);
+      transition: background 0.2s;
+    }
+    .dashboard-row:last-child { border-bottom: none; }
+    .dashboard-row:hover { background: rgba(255,255,255,0.02); }
+
+    .member-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-green  { background: var(--green); box-shadow: 0 0 8px rgba(34,197,94,0.5); }
+    .dot-amber  { background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+    .dot-gray   { background: #374151; }
+
+    .member-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1f2937, #374151);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .member-name { font-size: 14px; font-weight: 500; }
+
+    .member-status {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+    .member-status.active { color: var(--green); }
+    .member-status.idle   { color: var(--amber); }
+    .member-status.offline { color: #4b5563; }
+
+    .member-hours {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      text-align: right;
+      min-width: 50px;
+      white-space: nowrap;
+    }
+
+    .dashboard-footer {
+      padding: 12px 24px;
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .df-sync {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .df-sync-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+    .df-total {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .df-total span { color: var(--accent); font-weight: 600; }
 
     /* ── SECTIONS ── */
     section {
-      padding: 80px 24px;
-      max-width: 1100px;
+      padding: 100px 24px;
+      max-width: 1000px;
       margin: 0 auto;
     }
 
     .section-label {
+      display: inline-block;
+      color: var(--accent);
       font-size: 12px;
       font-weight: 600;
-      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--accent);
+      letter-spacing: 1.5px;
       margin-bottom: 12px;
-      text-align: center;
     }
 
-    .section-title {
-      font-size: clamp(28px, 4vw, 40px);
+    h2 {
+      font-size: clamp(28px, 4vw, 42px);
       font-weight: 700;
-      letter-spacing: -0.03em;
-      text-align: center;
+      letter-spacing: -1px;
       margin-bottom: 16px;
+      line-height: 1.2;
     }
 
     .section-sub {
-      font-size: 16px;
       color: var(--muted);
-      text-align: center;
-      max-width: 560px;
-      margin: 0 auto 56px;
-      line-height: 1.7;
+      font-size: 17px;
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 60px;
     }
 
     /* ── HOW IT WORKS ── */
+    #how-it-works { text-align: center; }
+    #how-it-works .section-sub { margin: 0 auto 60px; }
+
     .steps {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2px;
+      background: var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
     }
 
     .step {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
+      background: var(--card);
+      padding: 36px 32px;
+      text-align: left;
       position: relative;
-      transition: border-color 0.2s;
     }
 
-    .step:hover { border-color: rgba(0, 255, 136, 0.3); }
-
-    .step-num {
+    .step-number {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 24px; right: 24px;
       font-size: 48px;
-      font-weight: 800;
-      color: var(--border);
+      font-weight: 700;
+      color: rgba(255,255,255,0.04);
       line-height: 1;
-      letter-spacing: -0.04em;
     }
 
     .step-icon {
-      font-size: 36px;
-      margin-bottom: 16px;
+      width: 48px; height: 48px;
+      background: var(--accent-dim);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
     }
 
-    .step-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 8px;
+    .step h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
     }
 
-    .step-desc {
+    .step p {
       font-size: 14px;
       color: var(--muted);
       line-height: 1.6;
     }
 
     /* ── FEATURES ── */
-    .features-bg {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .features {
+    .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
     }
 
     .feature-card {
-      background: var(--bg);
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 28px;
-      transition: all 0.2s;
+      transition: border-color 0.2s, transform 0.2s;
     }
-
     .feature-card:hover {
-      border-color: rgba(0, 255, 136, 0.3);
-      transform: translateY(-2px);
+      border-color: rgba(0, 212, 170, 0.3);
+      transform: translateY(-3px);
     }
 
     .feature-icon {
-      font-size: 28px;
-      margin-bottom: 14px;
+      width: 44px; height: 44px;
+      background: var(--accent-dim);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
     }
 
-    .feature-title {
+    .feature-card h3 {
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 600;
       margin-bottom: 8px;
     }
 
-    .feature-desc {
+    .feature-card p {
       font-size: 14px;
       color: var(--muted);
       line-height: 1.6;
     }
 
     /* ── PRICING ── */
-    .pricing-card {
-      max-width: 560px;
-      margin: 0 auto;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 48px;
+    #pricing {
       text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .pricing-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--accent);
+      padding: 100px 24px;
+      max-width: 640px;
+      margin: 0 auto;
     }
 
     .pricing-badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: var(--accent);
-      color: #0d1117;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      color: #0a0f1a;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 999px;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      padding: 6px 18px;
-      border-radius: 20px;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
-    .pricing-price {
-      font-size: 72px;
-      font-weight: 800;
-      letter-spacing: -0.05em;
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid rgba(0, 212, 170, 0.25);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: 0 0 60px rgba(0, 212, 170, 0.08);
+    }
+
+    .pricing-free {
+      font-size: 56px;
+      font-weight: 700;
       color: var(--accent);
       line-height: 1;
       margin-bottom: 8px;
+      letter-spacing: -2px;
     }
 
-    .pricing-price sup {
-      font-size: 32px;
-      font-weight: 700;
-      vertical-align: super;
-    }
-
-    .pricing-desc {
-      font-size: 16px;
+    .pricing-period {
       color: var(--muted);
+      font-size: 15px;
       margin-bottom: 32px;
     }
 
-    .pricing-perks {
+    .pricing-checklist {
       list-style: none;
-      margin-bottom: 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+      margin-bottom: 32px;
       text-align: left;
     }
 
-    .pricing-perks li {
+    .pricing-checklist li {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 15px;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
     }
 
-    .pricing-perks li:last-child { border-bottom: none; }
-
-    .pricing-perks li::before {
-      content: '✓';
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 16px;
+    .check-icon {
+      width: 18px; height: 18px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .pricing-note {
       font-size: 13px;
       color: var(--muted);
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
     }
 
-    /* ── ISA SECTION ── */
-    .isa-section {
-      background: var(--surface2);
+    /* ── INSTALLSMART SECTION ── */
+    .installsmart-section {
+      padding: 0 24px 100px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .installsmart-card {
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 48px;
+      padding: 40px 44px;
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .installsmart-icon {
+      width: 52px; height: 52px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(0,212,170,0.2);
+      border-radius: 14px;
       display: flex;
       align-items: center;
-      gap: 48px;
-      flex-wrap: wrap;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
-    .isa-text { flex: 1; min-width: 260px; }
-
-    .isa-logo {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .isa-title {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-    }
-
-    .isa-desc {
-      font-size: 15px;
+    .installsmart-body p {
       color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-
-    .isa-link {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
       font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 8px;
     }
 
-    .isa-link:hover { text-decoration: underline; }
-
-    .isa-cta { flex-shrink: 0; }
+    .installsmart-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 12px;
+      transition: gap 0.2s;
+    }
+    .installsmart-link:hover { gap: 10px; }
 
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 32px 24px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
+      padding: 40px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--text); }
+    .footer-left { display: flex; flex-direction: column; gap: 8px; }
+    .footer-copy { font-size: 12px; color: var(--muted); }
 
-    .footer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-right {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .footer-email {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .footer-email:hover { color: var(--accent); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+      max-width: 1000px;
+      margin: 0 auto;
     }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
-      nav { padding: 14px 20px; }
+      nav { padding: 0 20px; }
       .hero { padding: 100px 20px 60px; }
-      .hero-ctas { flex-direction: column; align-items: center; }
-      .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
-      .isa-section { padding: 32px; flex-direction: column; }
-      .pricing-card { padding: 32px 24px; }
+      .installsmart-card { flex-direction: column; gap: 20px; padding: 28px 24px; }
+      footer { padding: 32px 20px; flex-direction: column; align-items: flex-start; }
+      .footer-right { align-items: flex-start; }
+      .pricing-checklist { grid-template-columns: 1fr; }
+      .pricing-card { padding: 36px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-cta span { display: none; }
+      h1 { letter-spacing: -1px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
+  <!-- ── NAV ── -->
   <nav>
-    <div class="nav-logo">Honest<span class="green">Hours</span></div>
-    <a href="https://chrome.google.com/webstore" class="nav-cta">Add to Chrome — Free</a>
+    <a href="/" class="nav-logo">
+      <!-- Clock + check SVG logo -->
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="17" cy="17" r="16" stroke="#00d4aa" stroke-width="1.5" fill="none" opacity="0.2"/>
+        <circle cx="17" cy="17" r="13" stroke="#00d4aa" stroke-width="2" fill="none"/>
+        <line x1="17" y1="9" x2="17" y2="17" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+        <line x1="17" y1="17" x2="22" y2="20" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="17" cy="17" r="1.5" fill="#00d4aa"/>
+        <!-- tick / check at bottom right quadrant -->
+        <path d="M12.5 17.5 L15.5 20.5 L22 13.5" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      </svg>
+      <span class="wordmark">
+        <span class="wordmark-honest">Honest</span><span class="wordmark-hours">Hours</span>
+      </span>
+    </a>
+    <a href="https://chrome.google.com/webstore" class="nav-cta" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="7" r="2.5" fill="currentColor"/><path d="M7 4.5V1M10.5 7H13M7 9.5V13M3.5 7H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>Add to Chrome — Free</span>
+    </a>
   </nav>
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="hero-badge">Free for SMEs · No credit card</div>
-    <h1 class="hero-logo">Honest<span class="green">Hours</span></h1>
-    <p class="hero-tagline">Know when your team is actually working</p>
-    <p class="hero-sub">Free Chrome extension for SMEs. Real-time activity tracking with zero micromanagement.</p>
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Free Chrome Extension · Now in Early Access
+    </div>
+    <h1>Know when your team is<br><em>actually working</em></h1>
+    <p class="hero-sub">Free Chrome extension for SMEs. Tracks activity in real time — without the surveillance.</p>
     <div class="hero-ctas">
-      <a href="https://chrome.google.com/webstore" class="btn-primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+      <a href="https://chrome.google.com/webstore" class="btn-primary" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2.8" fill="currentColor"/><path d="M8 5V1.5M11 8H14.5M8 11V14.5M5 8H1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         Add to Chrome — Free
       </a>
-      <a href="#how-it-works" class="btn-ghost">See how it works →</a>
+      <a href="#how-it-works" class="btn-ghost">
+        See how it works ↓
+      </a>
     </div>
-  </header>
-
-  <!-- HOW IT WORKS -->
-  <section id="how-it-works">
-    <div class="section-label">Simple setup</div>
-    <h2 class="section-title">Up and running in minutes</h2>
-    <p class="section-sub">No IT support needed. No server setup. Your team is tracking in under 5 minutes.</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-icon">🔌</div>
-        <div class="step-title">Install the Chrome extension</div>
-        <div class="step-desc">One click from the Chrome Web Store. No IT required. Works on any Windows, Mac, or Chromebook.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-icon">👥</div>
-        <div class="step-title">Your team logs in and starts tracking</div>
-        <div class="step-desc">Each team member adds their name and company code. Clock in with one click — tracking starts automatically.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-icon">📊</div>
-        <div class="step-title">See real-time activity in your dashboard</div>
-        <div class="step-desc">You see who's working, who's idle, and total hours — updated every 5 minutes. No waiting until end of day.</div>
-      </div>
+    <div class="social-proof">
+      <strong>Built by InstallSmart.AI</strong>
+      <span class="social-proof-dot">·</span>
+      Free for 6 months
+      <span class="social-proof-dot">·</span>
+      Privacy-first
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <div class="features-bg">
-    <section id="features">
-      <div class="section-label">Built for real teams</div>
-      <h2 class="section-title">Everything you need, nothing you don't</h2>
-      <p class="section-sub">Honest Hours tracks what matters — active time and idle time — without invading your team's privacy.</p>
-      <div class="features">
-        <div class="feature-card">
-          <div class="feature-icon">💤</div>
-          <div class="feature-title">Idle detection</div>
-          <div class="feature-desc">Automatically detects when someone steps away from their desk. No gaming the clock.</div>
+  <!-- ── DASHBOARD MOCK ── -->
+  <div class="dashboard-section">
+    <div class="dashboard-wrapper">
+      <div class="dashboard-glow"></div>
+      <div class="dashboard-mock">
+        <!-- Browser chrome -->
+        <div class="dashboard-topbar">
+          <span class="traffic-dot td-red"></span>
+          <span class="traffic-dot td-amber"></span>
+          <span class="traffic-dot td-green"></span>
+          <div class="dashboard-title-bar">app.honesthours.io/team</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔄</div>
-          <div class="feature-title">5-minute sync</div>
-          <div class="feature-desc">Data updates in real time, not end-of-day. You know what's happening while it's happening.</div>
+        <!-- Dashboard header -->
+        <div class="dashboard-header">
+          <div class="dashboard-header-title">Team Overview</div>
+          <div class="dashboard-date">Today, Thu 12 Mar</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">👁️</div>
-          <div class="feature-title">Team dashboard</div>
-          <div class="feature-desc">See everyone at a glance — clocked in, clocked out, active, idle. One view, zero confusion.</div>
+        <!-- Team rows -->
+        <div class="dashboard-row">
+          <div class="member-info">
+            <span class="status-dot dot-green"></span>
+            <div class="member-avatar">SM</div>
+            <span class="member-name">Sarah M.</span>
+          </div>
+          <div class="member-status active">Active now</div>
+          <div class="member-hours">4h 23m</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔒</div>
-          <div class="feature-title">Privacy-first</div>
-          <div class="feature-desc">Tracks activity, not websites or keystrokes. Your team sees exactly what's being tracked. Zero surveillance.</div>
+        <div class="dashboard-row">
+          <div class="member-info">
+            <span class="status-dot dot-green"></span>
+            <div class="member-avatar">JK</div>
+            <span class="member-name">James K.</span>
+          </div>
+          <div class="member-status active">Active now</div>
+          <div class="member-hours">3h 51m</div>
+        </div>
+        <div class="dashboard-row">
+          <div class="member-info">
+            <span class="status-dot dot-amber"></span>
+            <div class="member-avatar">TR</div>
+            <span class="member-name">Tom R.</span>
+          </div>
+          <div class="member-status idle">Idle 12m</div>
+          <div class="member-hours">2h 08m</div>
+        </div>
+        <div class="dashboard-row">
+          <div class="member-info">
+            <span class="status-dot dot-green"></span>
+            <div class="member-avatar">EP</div>
+            <span class="member-name">Emma P.</span>
+          </div>
+          <div class="member-status active">Active now</div>
+          <div class="member-hours">5h 02m</div>
+        </div>
+        <div class="dashboard-row">
+          <div class="member-info">
+            <span class="status-dot dot-gray"></span>
+            <div class="member-avatar" style="opacity:0.5">DH</div>
+            <span class="member-name" style="color:var(--muted)">Dan H.</span>
+          </div>
+          <div class="member-status offline">Offline</div>
+          <div class="member-hours" style="color:var(--muted)">1h 30m</div>
+        </div>
+        <!-- Footer -->
+        <div class="dashboard-footer">
+          <div class="df-sync">
+            <span class="df-sync-dot"></span>
+            Live · syncs every 5 min
+          </div>
+          <div class="df-total">Team total today: <span>16h 54m</span></div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 
-  <!-- PRICING -->
+  <div class="divider"></div>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section id="how-it-works">
+    <span class="section-label">How it works</span>
+    <h2>Up and running in minutes</h2>
+    <p class="section-sub">No IT team needed. No complicated setup. Just install, invite your team, and go.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step-number">1</span>
+        <div class="step-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 2C6.03 2 2 6.03 2 11s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z" stroke="#00d4aa" stroke-width="1.5"/>
+            <path d="M8 11l2 2 4-4" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Install</h3>
+        <p>One-click Chrome extension install. No admin access, no IT ticket, no configuration.</p>
+      </div>
+      <div class="step">
+        <span class="step-number">2</span>
+        <div class="step-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="8" r="3.5" stroke="#00d4aa" stroke-width="1.5"/>
+            <path d="M4 19c0-3.87 3.13-7 7-7h0c3.87 0 7 3.13 7 7" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Team logs in</h3>
+        <p>Each team member signs in once. Tracking starts automatically — no manual timers.</p>
+      </div>
+      <div class="step">
+        <span class="step-number">3</span>
+        <div class="step-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="2" y="4" width="18" height="14" rx="2" stroke="#00d4aa" stroke-width="1.5"/>
+            <path d="M6 14l3-4 3 3 2-3 2 4" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>You see everything</h3>
+        <p>Real-time dashboard refreshes every 5 minutes. See who's active, idle, or offline right now.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── FEATURES ── -->
+  <section id="features">
+    <span class="section-label">Features</span>
+    <h2>Built for real-world teams</h2>
+    <p class="section-sub">Honest about what it tracks — and what it doesn't.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="#00d4aa" stroke-width="1.5"/>
+            <path d="M10 6v4l2.5 2.5" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M6 13.5l1.5-1.5" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3>Idle Detection</h3>
+        <p>Knows when someone steps away, not just when they move the mouse. Accurate to the minute.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 10a7 7 0 1014 0A7 7 0 003 10z" stroke="#00d4aa" stroke-width="1.5"/>
+            <path d="M10 6v4l3 1.5" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M3 4l2 2M17 4l-2 2" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3>5-Minute Sync</h3>
+        <p>Dashboard refreshes every 5 minutes — not end of day. See what's happening right now.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="5" width="14" height="10" rx="2" stroke="#00d4aa" stroke-width="1.5"/>
+            <path d="M7 9h6M7 12h4" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M15 3l2 2-2 2" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3>No Keylogging</h3>
+        <p>We track time and activity status — never websites visited, keystrokes, or screen content.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="2" y="6" width="9" height="7" rx="1.5" stroke="#00d4aa" stroke-width="1.5"/>
+            <rect x="13" y="4" width="5" height="4" rx="1" stroke="#00d4aa" stroke-width="1.5"/>
+            <path d="M11 9.5h2M13 8v4" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Multi-device</h3>
+        <p>Works wherever Chrome is installed. Laptops, desktops, different locations — all in one view.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── PRICING ── -->
   <section id="pricing">
-    <div class="section-label">Pricing</div>
-    <h2 class="section-title">Free. For real.</h2>
-    <p class="section-sub">No trials. No freemium gotchas. Just install and go.</p>
+    <span class="pricing-badge">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.5 4.5H12L8.25 7.25l1.5 4.5L6 9l-3.75 2.75 1.5-4.5L0 4.5h4.5z"/></svg>
+      Free for 6 months
+    </span>
+    <h2>Simple pricing.<br>Start free today.</h2>
+    <p class="section-sub" style="margin: 0 auto 40px;">We're in early access. Use it free while we build and refine with you.</p>
     <div class="pricing-card">
-      <div class="pricing-badge">Free for 6 months</div>
-      <div class="pricing-price"><sup>£</sup>0</div>
-      <div class="pricing-desc">per month, forever</div>
-      <ul class="pricing-perks">
-        <li>Up to 10 team members</li>
-        <li>Real-time dashboard</li>
-        <li>Idle detection included</li>
-        <li>5-minute heartbeat sync</li>
-        <li>Clock in / clock out history</li>
-        <li>No credit card required</li>
+      <div class="pricing-free">£0</div>
+      <div class="pricing-period">per month · for 6 months early access</div>
+      <ul class="pricing-checklist">
+        <li>
+          <span class="check-icon">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#0a0f1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Unlimited team members
+        </li>
+        <li>
+          <span class="check-icon">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#0a0f1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Real-time dashboard
+        </li>
+        <li>
+          <span class="check-icon">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#0a0f1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Full feature access
+        </li>
+        <li>
+          <span class="check-icon">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#0a0f1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          No credit card needed
+        </li>
       </ul>
-      <a href="https://chrome.google.com/webstore" class="btn-primary" style="width:100%;justify-content:center;">
+      <a href="https://chrome.google.com/webstore" class="btn-primary" target="_blank" rel="noopener" style="width:100%;justify-content:center;font-size:16px;padding:16px;">
         Add to Chrome — Free
       </a>
-      <p class="pricing-note" style="margin-top:16px;">Free for the first 6 months while we build and refine with you. Pricing to follow.</p>
+      <p class="pricing-note">Pricing will be announced after our early access period ends. We'll give plenty of notice.</p>
     </div>
   </section>
 
-  <!-- ISA -->
-  <section id="about">
-    <div class="isa-section">
-      <div class="isa-text">
-        <div class="isa-logo">Built by InstallSmart.AI</div>
-        <h3 class="isa-title">We build tools to show what AI can do for your business</h3>
-        <p class="isa-desc">
-          Honest Hours is a free tool from InstallSmart.AI — the independent AI advisory firm for London SMEs.
-          We build practical tools like this to demonstrate what's possible. No fluff, no hype — just working software that solves real problems.
-        </p>
-        <p class="isa-desc">
-          If you're thinking about AI in your business,
-          <a href="https://calendly.com/sat-installsmart/15min" class="isa-link">we'd love to talk →</a>
-        </p>
+  <div class="divider" style="max-width:800px"></div>
+
+  <!-- ── INSTALLSMART SECTION ── -->
+  <div class="installsmart-section">
+    <div class="installsmart-card">
+      <div class="installsmart-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <path d="M13 3L3 8v5c0 5.5 4.3 10.7 10 12 5.7-1.3 10-6.5 10-12V8L13 3z" stroke="#00d4aa" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M9 13l3 3 5-5" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
-      <div class="isa-cta">
-        <a href="https://calendly.com/sat-installsmart/15min" class="btn-primary">Book a free 15-min chat</a>
+      <div class="installsmart-body">
+        <p>HonestHours is a free tool from <strong style="color:#fff">InstallSmart.AI</strong> — independent AI advisors for London SMEs.</p>
+        <p>We build tools like this to demonstrate what modern AI infrastructure looks like in practice.</p>
+        <a href="https://calendly.com/sat-installsmart/15min" class="installsmart-link" target="_blank" rel="noopener">
+          Thinking about AI in your business? Let's talk →
+        </a>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- FOOTER -->
+  <!-- ── FOOTER ── -->
   <footer>
-    <div class="footer-inner">
-      <div><strong>Honest<span style="color:var(--accent)">Hours</span></strong></div>
-      <div>© 2026 Kaizen Finance Ltd &nbsp;·&nbsp; <a href="mailto:sat@installsmart.ai">sat@installsmart.ai</a> &nbsp;·&nbsp; <a href="https://honesthours.io">honesthours.io</a></div>
-      <div><a href="/privacy.html">Privacy Policy</a></div>
+    <div class="footer-left">
+      <a href="/" class="nav-logo" style="gap:8px">
+        <svg width="26" height="26" viewBox="0 0 34 34" fill="none">
+          <circle cx="17" cy="17" r="13" stroke="#00d4aa" stroke-width="2" fill="none"/>
+          <line x1="17" y1="9" x2="17" y2="17" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17" y1="17" x2="22" y2="20" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="17" cy="17" r="1.5" fill="#00d4aa"/>
+          <path d="M12.5 17.5 L15.5 20.5 L22 13.5" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+        </svg>
+        <span class="wordmark" style="font-size:15px">
+          <span class="wordmark-honest">Honest</span><span class="wordmark-hours">Hours</span>
+        </span>
+      </a>
+      <span class="footer-copy">© 2026 Kaizen Finance Ltd · All rights reserved</span>
+    </div>
+    <div class="footer-links">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="https://chrome.google.com/webstore" target="_blank" rel="noopener">Chrome Web Store</a>
+      <a href="mailto:sat@installsmart.ai">Contact</a>
+    </div>
+    <div class="footer-right">
+      <a href="mailto:sat@installsmart.ai" class="footer-email">sat@installsmart.ai</a>
     </div>
   </footer>
 
