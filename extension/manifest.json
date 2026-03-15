@@ -3,7 +3,7 @@
   "name": "Honest Hours",
   "version": "1.0.0",
   "description": "WFH time tracking built on trust, not surveillance.",
-  "permissions": ["storage", "alarms", "idle", "tabs"],
+  "permissions": ["storage", "alarms", "idle"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
