@@ -105,8 +105,31 @@ async function handleStart() {
     lastTickTime: Date.now()
   });
 
-  // Notify background to start
-  chrome.runtime.sendMessage({ type: 'SESSION_START', sessionId, config, startTime: now });
+  // Fire immediate heartbeat directly from popup (don't wait on background)
+  const api = config.apiEndpoint || 'https://honesthours-api.onrender.com';
+  try {
+    await fetch(`${api}/api/session/start`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        employee_id: config.employeeId,
+        employee_name: config.employeeName,
+        company_code: config.companyCode,
+        session_id: sessionId,
+        start_time: now
+      })
+    });
+    await chrome.storage.local.set({ lastHeartbeat: new Date().toISOString() });
+  } catch (e) {
+    console.warn('[HonestHours] Immediate session start failed:', e.message);
+  }
+
+  // Notify background to schedule heartbeat alarms (best effort)
+  try {
+    chrome.runtime.sendMessage({ type: 'SESSION_START', sessionId, config, startTime: now });
+  } catch (e) {
+    // Background may not be active yet — alarms will fire on next wake
+  }
 
   // Reload popup
   init();
