@@ -308,7 +308,10 @@
 
     <!-- Today -->
     <div class="section-head">
-      <div class="section-title">Today's Activity</div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="section-title">Today's Activity</div>
+        <div id="onlineNow" style="display:none;font-size:12px;font-weight:700;color:var(--online);background:rgba(126,232,162,0.1);border:1px solid rgba(126,232,162,0.25);padding:3px 10px;border-radius:20px;"></div>
+      </div>
       <div class="live-badge"><div class="live-dot"></div> Live · refreshes every 60s</div>
     </div>
 
@@ -420,8 +423,19 @@
 
   function renderToday(sessions) {
     const tbody = document.getElementById('todayBody');
+
+    // Update "Online now" count
+    const onlineCount = sessions.filter(s => s.is_online && s.status === 'active').length;
+    const onlineEl = document.getElementById('onlineNow');
+    if (onlineCount > 0) {
+      onlineEl.textContent = `● ${onlineCount} online now`;
+      onlineEl.style.display = '';
+    } else {
+      onlineEl.style.display = 'none';
+    }
+
     if (!sessions.length) {
-      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No activity today yet.<p>Employees need to clock in using the Honest Hours extension.</p></div></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No team members tracked today.<p>Employees need to clock in using the Honest Hours extension.</p></div></td></tr>';
       return;
     }
 

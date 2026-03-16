@@ -91,6 +91,22 @@
     .wordmark-honest { font-weight: 500; color: #fff; }
     .wordmark-hours  { font-weight: 700; color: var(--accent); }
 
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text); }
+
     .nav-cta {
       display: inline-flex;
       align-items: center;
@@ -853,10 +869,14 @@
         <span class="wordmark-honest">Honest</span><span class="wordmark-hours">Hours</span>
       </span>
     </a>
-    <a href="https://chrome.google.com/webstore" class="nav-cta" target="_blank" rel="noopener">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="7" r="2.5" fill="currentColor"/><path d="M7 4.5V1M10.5 7H13M7 9.5V13M3.5 7H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <span>Add to Chrome — Free</span>
-    </a>
+    <div class="nav-right">
+      <a href="signup.html" class="nav-link">Register Company</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="https://chrome.google.com/webstore" class="nav-cta" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="7" r="2.5" fill="currentColor"/><path d="M7 4.5V1M10.5 7H13M7 9.5V13M3.5 7H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>Add to Chrome — Free</span>
+      </a>
+    </div>
   </nav>
 
   <!-- ── HERO ── -->

@@ -182,13 +182,24 @@ async function init() {
 
   // Live tick if clocked in
   if (state.status === 'active') {
-    const elapsed = Math.floor((Date.now() - (state.lastTickTime || Date.now())) / 1000);
-    let displaySeconds = (state.todayActiveSeconds || 0) + elapsed;
+    // Compute elapsed since background last saved todayActiveSeconds.
+    // lastTickTime and todayActiveSeconds are always updated together by
+    // the background heartbeat, so this gives the correct current total.
+    const base = state.todayActiveSeconds || 0;
+    const tickBase = state.lastTickTime ? state.lastTickTime : Date.now();
+    let displaySeconds = base + Math.floor((Date.now() - tickBase) / 1000);
 
-    setInterval(() => {
+    const hoursDisplay = document.getElementById('hoursDisplay');
+    if (hoursDisplay) hoursDisplay.textContent = formatDuration(displaySeconds);
+
+    const iv = setInterval(() => {
       displaySeconds++;
       const el = document.getElementById('hoursDisplay');
-      if (el) el.textContent = formatDuration(displaySeconds);
+      if (el) {
+        el.textContent = formatDuration(displaySeconds);
+      } else {
+        clearInterval(iv); // popup was closed
+      }
     }, 1000);
   }
 }

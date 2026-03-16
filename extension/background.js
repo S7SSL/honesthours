@@ -54,28 +54,10 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
 });
 
 async function handleSessionStart({ sessionId, config, startTime }) {
-  // Set lastTickTime for elapsed calc
-  await chrome.storage.local.set({ lastTickTime: Date.now() });
-
-  // POST session start to API
-  const api = config.apiEndpoint || DEFAULT_API;
-  try {
-    await fetch(`${api}/api/session/start`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        employee_id: config.employeeId,
-        employee_name: config.employeeName,
-        company_code: config.companyCode,
-        session_id: sessionId,
-        start_time: startTime
-      })
-    });
-  } catch (e) {
-    console.warn('[HonestHours] Session start API error:', e.message);
-  }
-
-  // Schedule heartbeat alarm every 5 minutes
+  // popup.js already fired the session/start API call and set lastTickTime —
+  // don't duplicate either here, or we'd corrupt the elapsed-time baseline.
+  // Just schedule the heartbeat alarm.
+  await chrome.alarms.clear(HEARTBEAT_ALARM); // clear any stale alarm first
   chrome.alarms.create(HEARTBEAT_ALARM, { periodInMinutes: 5 });
 }
 

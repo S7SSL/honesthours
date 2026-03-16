@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Honest Hours — Register Your Company</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0f1a;
+      --card: #111827;
+      --border: #1f2937;
+      --accent: #00d4aa;
+      --accent-dim: rgba(0, 212, 170, 0.08);
+      --accent-glow: rgba(0, 212, 170, 0.15);
+      --text: #ffffff;
+      --muted: #8892a4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 212, 170, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 170, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .page { position: relative; z-index: 1; width: 100%; max-width: 440px; }
+
+    /* Logo / header */
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 32px;
+      text-decoration: none;
+    }
+
+    .wordmark { font-size: 20px; letter-spacing: -0.3px; }
+    .wordmark-honest { font-weight: 500; color: #fff; }
+    .wordmark-hours  { font-weight: 700; color: var(--accent); }
+
+    /* Card */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .card-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    /* Form */
+    .field { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #0a0f1a;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Error */
+    .error-msg {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    /* Result */
+    .result { display: none; }
+
+    .result-heading {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .result-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .code-box {
+      background: var(--bg);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .code-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .code-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .copy-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(0, 212, 170, 0.25);
+      border-radius: 10px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .copy-btn:hover { background: rgba(0, 212, 170, 0.14); }
+
+    .instruction {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .instruction a { color: var(--accent); text-decoration: none; }
+    .instruction a:hover { text-decoration: underline; }
+
+    /* Back link */
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <a href="/" class="logo-row">
+    <svg width="30" height="30" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="17" cy="17" r="16" stroke="#00d4aa" stroke-width="0.5" fill="none" opacity="0.18"/>
+      <circle cx="17" cy="17" r="13" stroke="#00d4aa" stroke-width="2" fill="none"/>
+      <line x1="17" y1="17" x2="9.7" y2="12.7" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+      <line x1="17" y1="17" x2="24.4" y2="12.7" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="17" cy="17" r="1.5" fill="#00d4aa"/>
+      <path d="M11.5 19.5 L15.5 23.5 L23 15.5" stroke="#00d4aa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+    </svg>
+    <span class="wordmark">
+      <span class="wordmark-honest">Honest</span><span class="wordmark-hours">Hours</span>
+    </span>
+  </a>
+
+  <div class="card">
+
+    <!-- Form view -->
+    <div id="formView">
+      <div class="card-title">Register Your Company</div>
+      <div class="card-sub">Get a company code to share with your team. Free for 6 months.</div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <div class="field">
+        <label for="companyName">Company Name</label>
+        <input type="text" id="companyName" placeholder="e.g. Acme Ltd" autocomplete="organization" />
+      </div>
+
+      <div class="field">
+        <label for="email">Work Email</label>
+        <input type="email" id="email" placeholder="you@company.com" autocomplete="email" />
+      </div>
+
+      <button class="btn-submit" id="submitBtn">Get Company Code →</button>
+    </div>
+
+    <!-- Result view -->
+    <div class="result" id="resultView">
+      <div class="result-heading">You're all set!</div>
+      <div class="result-sub">Share this code with your team. They'll enter it when setting up the Honest Hours extension.</div>
+
+      <div class="code-box">
+        <div class="code-label">Your Company Code</div>
+        <div class="code-value" id="resultCode"></div>
+      </div>
+
+      <button class="copy-btn" id="copyBtn">Copy Code</button>
+
+      <div class="instruction">
+        Give this code to your team.<br/>
+        View your <a href="dashboard.html" id="dashLink">employer dashboard →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <a href="/" class="back-link">← Back to honesthours.io</a>
+
+</div>
+
+<script>
+  const API = 'https://honesthours-api.onrender.com';
+
+  document.getElementById('submitBtn').addEventListener('click', register);
+  document.getElementById('companyName').addEventListener('keydown', e => { if (e.key === 'Enter') register(); });
+  document.getElementById('email').addEventListener('keydown', e => { if (e.key === 'Enter') register(); });
+
+  async function register() {
+    const name = document.getElementById('companyName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const errEl = document.getElementById('errorMsg');
+    const btn = document.getElementById('submitBtn');
+
+    errEl.style.display = 'none';
+
+    if (!name) {
+      errEl.textContent = 'Please enter your company name.';
+      errEl.style.display = 'block';
+      document.getElementById('companyName').focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Registering…';
+
+    try {
+      const res = await fetch(`${API}/api/register-company`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email: email || undefined })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || `Server error ${res.status}`);
+      }
+
+      // Show result
+      document.getElementById('resultCode').textContent = data.company_code;
+      document.getElementById('dashLink').href = `dashboard.html#${data.company_code}`;
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('resultView').style.display = 'block';
+
+    } catch (e) {
+      errEl.textContent = `Registration failed: ${e.message}`;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Get Company Code →';
+    }
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const code = document.getElementById('resultCode').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Code'; }, 2000);
+    });
+  });
+</script>
+</body>
+</html>

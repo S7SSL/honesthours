@@ -242,6 +242,34 @@ app.get('/api/employee/:employee_id/summary', async (req, res) => {
   });
 });
 
+// ── POST /api/register-company ────────────────────────────────────────────────
+
+app.post('/api/register-company', async (req, res) => {
+  const { name, email } = req.body;
+
+  if (!name || !name.trim()) {
+    return res.status(400).json({ error: 'name is required' });
+  }
+
+  // Auto-generate company_code: first word of name (uppercase) + "-" + 4-digit random
+  const firstWord = name.trim().split(/\s+/)[0].replace(/[^A-Za-z0-9]/g, '').toUpperCase() || 'CO';
+  const digits = String(Math.floor(1000 + Math.random() * 9000));
+  const company_code = `${firstWord}-${digits}`;
+
+  const { data, error } = await supabase
+    .from('companies')
+    .insert({ company_code, name: name.trim(), email: email || null })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('[register-company]', error);
+    return res.status(500).json({ error: error.message });
+  }
+
+  return res.json({ ok: true, company_code, name: data.name });
+});
+
 // ── GET /api/setup ────────────────────────────────────────────────────────────
 // Returns schema SQL to apply. Used for documentation / one-time setup.
 
