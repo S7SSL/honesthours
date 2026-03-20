@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.honesthours.io/</loc><changefreq>weekly</changefreq><priority>1.0</priority><lastmod>2026-03-15</lastmod></url>
-  <url><loc>https://www.honesthours.io/privacy.html</loc><changefreq>monthly</changefreq><priority>0.3</priority><lastmod>2026-03-15</lastmod></url>
+  <url><loc>https://honesthours.io/</loc><lastmod>2026-03-20</lastmod><priority>1.0</priority></url>
+  <url><loc>https://honesthours.io/blog/</loc><lastmod>2026-03-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://honesthours.io/blog/track-employee-hours-uk/</loc><lastmod>2026-03-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://honesthours.io/blog/free-vs-paid-time-tracking/</loc><lastmod>2026-03-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://honesthours.io/blog/calculate-overtime-pay-uk/</loc><lastmod>2026-03-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://honesthours.io/blog/freelancer-time-tracking-hmrc/</loc><lastmod>2026-03-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://honesthours.io/blog/best-chrome-extensions-time-tracking-2026/</loc><lastmod>2026-03-20</lastmod><priority>0.8</priority></url>
 </urlset>
