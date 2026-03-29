@@ -115,26 +115,101 @@ async function sendHeartbeat() {
 
   const now = new Date().toISOString();
   const api = config.apiEndpoint || DEFAULT_API;
+  
+  const payload = {
+    employee_id: config.employeeId,
+    employee_name: config.employeeName,
+    company_code: config.companyCode,
+    session_id: state.sessionId,
+    timestamp: now,
+    status: state.status,
+    total_active_seconds: activeSeconds,
+    idle_seconds: state.totalIdleSeconds || 0
+  };
 
   try {
-    await fetch(`${api}/api/heartbeat`, {
+    // Try API first
+    const response = await fetch(`${api}/api/heartbeat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        employee_id: config.employeeId,
-        employee_name: config.employeeName,
-        company_code: config.companyCode,
-        session_id: state.sessionId,
-        timestamp: now,
-        status: state.status,
-        total_active_seconds: activeSeconds,
-        idle_seconds: state.totalIdleSeconds || 0
-      })
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(5000) // 5-second timeout
     });
-    await chrome.storage.local.set({ lastHeartbeat: now });
+
+    if (response.ok) {
+      await chrome.storage.local.set({ lastHeartbeat: now, offlineQueue: [] });
+      console.log('[HonestHours] Heartbeat synced');
+      // Sync any queued offline data
+      await syncOfflineQueue(api);
+    } else {
+      throw new Error(`API returned ${response.status}`);
+    }
   } catch (e) {
-    console.warn('[HonestHours] Heartbeat error:', e.message);
+    console.warn('[HonestHours] API offline — queueing heartbeat:', e.message);
+    // Store in offline queue (localStorage)
+    await queueOfflineHeartbeat(payload);
+    // Notify popup of offline status
+    notifyOfflineStatus();
   }
+}
+
+// ── Offline mode (localStorage queue) ──────────────────────────────────────────
+
+async function queueOfflineHeartbeat(payload) {
+  try {
+    const queue = JSON.parse(localStorage.getItem('honesthours_offline_queue') || '[]');
+    queue.push({
+      type: 'heartbeat',
+      payload,
+      timestamp: Date.now()
+    });
+    localStorage.setItem('honesthours_offline_queue', JSON.stringify(queue));
+    console.log('[HonestHours] Queued offline heartbeat. Queue size:', queue.length);
+  } catch (e) {
+    console.error('[HonestHours] Failed to queue offline data:', e.message);
+  }
+}
+
+async function syncOfflineQueue(api) {
+  try {
+    const queue = JSON.parse(localStorage.getItem('honesthours_offline_queue') || '[]');
+    if (queue.length === 0) return;
+
+    console.log('[HonestHours] Syncing', queue.length, 'offline records...');
+    
+    for (const item of queue) {
+      if (item.type === 'heartbeat') {
+        try {
+          await fetch(`${api}/api/heartbeat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item.payload),
+            signal: AbortSignal.timeout(5000)
+          });
+        } catch (e) {
+          console.warn('[HonestHours] Failed to sync record:', e.message);
+          // Stop trying to sync remaining items if one fails
+          return;
+        }
+      }
+    }
+    
+    // Clear queue on successful sync
+    localStorage.setItem('honesthours_offline_queue', JSON.stringify([]));
+    console.log('[HonestHours] Offline queue synced successfully');
+  } catch (e) {
+    console.error('[HonestHours] Error syncing offline queue:', e.message);
+  }
+}
+
+function notifyOfflineStatus() {
+  // Send message to popup to show offline toast
+  chrome.runtime.sendMessage({ 
+    type: 'OFFLINE_MODE', 
+    message: 'API offline — working locally. Data will sync when connection returns.' 
+  }).catch(() => {
+    // Popup may not be open, that's ok
+  });
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

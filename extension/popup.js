@@ -2,6 +2,38 @@
 
 const app = document.getElementById('app');
 
+// ── Offline notifications ──────────────────────────────────────────────────────
+
+let offlineToastTimeout;
+
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type === 'OFFLINE_MODE') {
+    showOfflineToast(msg.message);
+  }
+});
+
+function showOfflineToast(message) {
+  // Remove existing toast
+  const existing = document.getElementById('offlineToast');
+  if (existing) existing.remove();
+  
+  if (offlineToastTimeout) clearTimeout(offlineToastTimeout);
+
+  const toast = document.createElement('div');
+  toast.id = 'offlineToast';
+  toast.style.cssText = `
+    position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+    background: #ff9800; color: white; padding: 10px 15px; border-radius: 4px;
+    font-size: 12px; z-index: 9999; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  `;
+  toast.textContent = '⚠️ ' + message;
+  document.body.appendChild(toast);
+
+  offlineToastTimeout = setTimeout(() => {
+    if (toast.parentNode) toast.parentNode.removeChild(toast);
+  }, 8000);
+}
+
 function formatDuration(seconds) {
   if (!seconds || seconds < 0) return '0h 00m';
   const h = Math.floor(seconds / 3600);
@@ -108,7 +140,7 @@ async function handleStart() {
   // Fire immediate heartbeat directly from popup (don't wait on background)
   const api = config.apiEndpoint || 'https://honesthours-api.onrender.com';
   try {
-    await fetch(`${api}/api/session/start`, {
+    const response = await fetch(`${api}/api/session/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -117,11 +149,20 @@ async function handleStart() {
         company_code: config.companyCode,
         session_id: sessionId,
         start_time: now
-      })
+      }),
+      signal: AbortSignal.timeout(5000)
     });
-    await chrome.storage.local.set({ lastHeartbeat: new Date().toISOString() });
+    
+    if (response.ok) {
+      await chrome.storage.local.set({ lastHeartbeat: new Date().toISOString() });
+    } else {
+      throw new Error(`API returned ${response.status}`);
+    }
   } catch (e) {
-    console.warn('[HonestHours] Immediate session start failed:', e.message);
+    console.warn('[HonestHours] Session start API failed — working offline:', e.message);
+    showOfflineToast('Clock-in saved locally. Will sync when online.');
+    // Still mark as clocked in locally; data will sync later
+    await chrome.storage.local.set({ lastHeartbeat: new Date().toISOString() });
   }
 
   // Notify background to schedule heartbeat alarms (best effort)
