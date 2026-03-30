@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 627">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A1A2E"/>
+      <stop offset="100%" style="stop-color:#00C851;stop-opacity:0.2"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="627" fill="url(#bg)"/>
+  <text x="80" y="150" font-family="Inter, sans-serif" font-size="72" font-weight="700" fill="#F0F4F9">
+    📖 Why I Built Honest Hours
+  </text>
+  <text x="80" y="300" font-family="Poppins, sans-serif" font-size="36" fill="#F0F4F9">
+    Because the right question isn't
+  </text>
+  <text x="80" y="350" font-family="Inter, sans-serif" font-size="48" font-weight="700" fill="#00C851">
+    "Do you trust your team?"
+  </text>
+  <text x="80" y="500" font-family="Poppins, sans-serif" font-size="32" fill="#00D9FF">
+    The answer was always yes. So why the surveillance?
+  </text>
+</svg>
