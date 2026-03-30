@@ -1,21 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 627">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#1A1A2E"/>
-      <stop offset="100%" style="stop-color:#00C851;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#1A3A2E"/>
+    </linearGradient>
+    <linearGradient id="accent2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00C851"/>
+      <stop offset="100%" style="stop-color:#00D9FF"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="627" fill="url(#bg)"/>
-  <text x="80" y="150" font-family="Inter, sans-serif" font-size="72" font-weight="700" fill="#F0F4F9">
-    📖 Why I Built Honest Hours
+  <!-- Background -->
+  <rect width="1200" height="627" fill="url(#bg2)"/>
+  <!-- Top accent bar -->
+  <rect width="1200" height="8" fill="url(#accent2)"/>
+  <!-- Emoji/Icon -->
+  <text x="100" y="120" font-size="72">📖</text>
+  <!-- Main headline -->
+  <text x="200" y="130" font-family="Inter, Arial, sans-serif" font-size="56" font-weight="700" fill="#F0F4F9">
+    Why I Built
   </text>
-  <text x="80" y="300" font-family="Poppins, sans-serif" font-size="36" fill="#F0F4F9">
-    Because the right question isn't
+  <text x="200" y="200" font-family="Inter, Arial, sans-serif" font-size="56" font-weight="700" fill="#00D9FF">
+    Honest Hours
   </text>
-  <text x="80" y="350" font-family="Inter, sans-serif" font-size="48" font-weight="700" fill="#00C851">
-    "Do you trust your team?"
+  <!-- Body -->
+  <text x="60" y="300" font-family="Poppins, Arial, sans-serif" font-size="24" fill="#F0F4F9">
+    Because the right question isn't "Do you trust your team?"
   </text>
-  <text x="80" y="500" font-family="Poppins, sans-serif" font-size="32" fill="#00D9FF">
-    The answer was always yes. So why the surveillance?
+  <text x="60" y="350" font-family="Poppins, Arial, sans-serif" font-size="24" fill="#F0F4F9">
+    The answer was always yes.
+  </text>
+  <text x="60" y="400" font-family="Poppins, Arial, sans-serif" font-size="24" fill="#00C851" font-weight="600">
+    So why the surveillance?
+  </text>
+  <!-- Hashtags -->
+  <text x="60" y="560" font-family="Poppins, Arial, sans-serif" font-size="18" fill="#00D9FF">
+    #Founder #RemoteWork #TrustFirst
   </text>
 </svg>

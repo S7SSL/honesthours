@@ -1,24 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 627">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#1A1A2E"/>
-      <stop offset="100%" style="stop-color:#00D9FF;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#0F3A3E"/>
+    </linearGradient>
+    <linearGradient id="accent3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00D9FF"/>
+      <stop offset="100%" style="stop-color:#00C851"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="627" fill="url(#bg)"/>
-  <text x="80" y="150" font-family="Inter, sans-serif" font-size="72" font-weight="700" fill="#F0F4F9">
-    ✨ What 'Honest' Actually Means
+  <!-- Background -->
+  <rect width="1200" height="627" fill="url(#bg3)"/>
+  <!-- Top accent bar -->
+  <rect width="1200" height="8" fill="url(#accent3)"/>
+  <!-- Main headline -->
+  <text x="60" y="110" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="700" fill="#F0F4F9">
+    What "Honest" Actually Means
   </text>
-  <text x="80" y="300" font-family="Poppins, sans-serif" font-size="40" fill="#00D9FF">
-    → No keystroke logging
+  <!-- Checkmarks with text -->
+  <text x="100" y="200" font-size="40">✓</text>
+  <text x="180" y="215" font-family="Poppins, Arial, sans-serif" font-size="28" fill="#F0F4F9">
+    No keystroke logging
   </text>
-  <text x="80" y="380" font-family="Poppins, sans-serif" font-size="40" fill="#00D9FF">
-    → No screenshots
+  
+  <text x="100" y="280" font-size="40">✓</text>
+  <text x="180" y="295" font-family="Poppins, Arial, sans-serif" font-size="28" fill="#F0F4F9">
+    No screenshots
   </text>
-  <text x="80" y="460" font-family="Poppins, sans-serif" font-size="40" fill="#00D9FF">
-    → No hidden monitoring
+  
+  <text x="100" y="360" font-size="40">✓</text>
+  <text x="180" y="375" font-family="Poppins, Arial, sans-serif" font-size="28" fill="#F0F4F9">
+    No hidden monitoring
   </text>
-  <text x="80" y="540" font-family="Poppins, sans-serif" font-size="32" fill="#00C851" font-weight="600">
-    Teams that feel trusted are the most productive.
+  
+  <!-- Bottom message -->
+  <text x="60" y="480" font-family="Poppins, Arial, sans-serif" font-size="24" fill="#00C851" font-weight="600">
+    Teams that feel trusted are the most productive teams.
+  </text>
+  
+  <!-- Hashtags -->
+  <text x="60" y="560" font-family="Poppins, Arial, sans-serif" font-size="18" fill="#00D9FF">
+    #Privacy #Trust #TeamCulture #WorkplaceTrends
   </text>
 </svg>

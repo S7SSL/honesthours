@@ -1,21 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 627">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#1A1A2E"/>
-      <stop offset="100%" style="stop-color:#00C851;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#0F2A2E"/>
+    </linearGradient>
+    <linearGradient id="accent4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00C851"/>
+      <stop offset="100%" style="stop-color:#00D9FF"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="627" fill="url(#bg)"/>
-  <text x="80" y="200" font-family="Inter, sans-serif" font-size="72" font-weight="700" fill="#F0F4F9">
-    🚀 Something's Coming
+  <!-- Background -->
+  <rect width="1200" height="627" fill="url(#bg4)"/>
+  <!-- Top accent bar -->
+  <rect width="1200" height="8" fill="url(#accent4)"/>
+  <!-- Rocket emoji -->
+  <text x="500" y="150" font-size="100" text-anchor="middle">🚀</text>
+  <!-- Main headline -->
+  <text x="600" y="300" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="700" fill="#F0F4F9" text-anchor="middle">
+    Something's Coming
   </text>
-  <text x="80" y="350" font-family="Inter, sans-serif" font-size="56" font-weight="700" fill="#F0F4F9">
+  <!-- Subheadline -->
+  <text x="600" y="380" font-family="Poppins, Arial, sans-serif" font-size="32" fill="#00D9FF" text-anchor="middle">
     That will flip the entire
   </text>
-  <text x="80" y="420" font-family="Inter, sans-serif" font-size="56" font-weight="700" fill="#F0F4F9">
+  <text x="600" y="430" font-family="Poppins, Arial, sans-serif" font-size="32" fill="#00D9FF" text-anchor="middle">
     productivity software space
   </text>
-  <text x="80" y="520" font-family="Poppins, sans-serif" font-size="48" fill="#00C851" font-weight="600">
+  <!-- CTA -->
+  <text x="600" y="520" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#00C851" text-anchor="middle">
     You'll want to see it.
+  </text>
+  <!-- Hashtags -->
+  <text x="600" y="570" font-family="Poppins, Arial, sans-serif" font-size="18" fill="#00D9FF" text-anchor="middle">
+    #Launch #SaaS #Innovation
   </text>
 </svg>
